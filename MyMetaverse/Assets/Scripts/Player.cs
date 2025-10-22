@@ -68,7 +68,8 @@ public class Player : MonoBehaviour
         _rigidbody.velocity = velocity;
 
         float angle = Mathf.Clamp((_rigidbody.velocity.y * 10f), -90, 90);
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        float lerpAngle = Mathf.Lerp(transform.rotation.eulerAngles.z, angle, Time.fixedDeltaTime * 5f);
+        transform.rotation = Quaternion.Euler(0, 0, lerpAngle);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
