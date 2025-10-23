@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -27,6 +28,8 @@ public class PlayerController : MonoBehaviour
     private static readonly int IsMove = Animator.StringToHash("IsMove");
 
     [SerializeField] private Animator animator;
+
+    [SerializeField] private SpeechBubbleHandler speechBubbleHandler;
 
 
     private void Awake()
@@ -58,7 +61,6 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
-
 
     #region 悼累 贸府
 
@@ -122,6 +124,19 @@ public class PlayerController : MonoBehaviour
         Down = 0,
         Up = 1,
         Side = 2
+    }
+
+    #endregion
+
+    #region 皋技瘤 贸府
+
+    public void SendMessageOnSpeechBubble(string message)
+    {
+        if (speechBubbleHandler)
+        {
+            speechBubbleHandler.gameObject.SetActive(true);
+            speechBubbleHandler.StartSpeech(message);
+        }
     }
 
     #endregion
