@@ -27,12 +27,20 @@ public class GameManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(gameObject);
+    }
 
+    private void Start()
+    {
         player = GameObject.FindObjectOfType<PlayerController>();
+    }
+
+    public void UpdatePlayer(PlayerController player)
+    {
+        this.player = player;
     }
 
     public void StartMiniGame()
     {
-        SceneManager.LoadScene(1);
+        SceneController.Instance.LoadScene(1);
     }
 }

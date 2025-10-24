@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
+    private Rigidbody2D _rigidbody;
+
     [Header("Component")]
     [SerializeField] private SpriteRenderer spriteRenderer;
 
@@ -16,20 +18,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 moveDirection;
     public Vector2 MoveDirection { get { return moveDirection; } }
 
-    private Rigidbody2D _rigidbody;
-
     public bool isMoving;
     public bool IsMoving { get { return isMoving; } }
 
     [Header("Animation Info")]
 
+    [SerializeField] private Animator animator;
+
+    [Header("SpeechBubble Info")]
+    [SerializeField] private SpeechBubbleHandler speechBubbleHandler;
+
+
     // 애니메이션 처리
     private static readonly int MoveDir = Animator.StringToHash("MoveDir");
     private static readonly int IsMove = Animator.StringToHash("IsMove");
-
-    [SerializeField] private Animator animator;
-
-    [SerializeField] private SpeechBubbleHandler speechBubbleHandler;
 
     private NPCInteractionHandler currentNPC;
 
@@ -143,6 +145,10 @@ public class PlayerController : MonoBehaviour
             speechBubbleHandler.gameObject.SetActive(true);
             speechBubbleHandler.StartSpeech(message);
         }
+        else
+        {
+            Debug.Log("존재 X");
+        }    
     }
 
     #endregion

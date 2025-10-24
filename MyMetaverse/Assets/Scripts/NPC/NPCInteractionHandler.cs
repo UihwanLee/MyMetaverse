@@ -9,7 +9,7 @@ public class NPCInteractionHandler : MonoBehaviour
 
     private IInteractable interactable;
 
-    private void Awake()
+    private void Start()
     {
         interactable = GetComponent<IInteractable>();
     }

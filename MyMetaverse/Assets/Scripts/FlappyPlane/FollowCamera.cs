@@ -9,7 +9,7 @@ public class FollowCamera : MonoBehaviour
 
     private float offset;
 
-    private void Awake()
+    private void Start()
     {
         offset = transform.position.x - target.position.x;
     }

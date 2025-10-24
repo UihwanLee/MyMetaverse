@@ -23,7 +23,10 @@ public class FlappyPlaneManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+    }
 
+    private void Start()
+    {
         gameUI = FindObjectOfType<FlappyPlaneUI>();
         plane = FindObjectOfType<PlaneController>();
 
@@ -64,11 +67,11 @@ public class FlappyPlaneManager : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneController.Instance.LoadScene(1);
     }
 
     public void Return()
     {
-        SceneManager.LoadScene(0);
+        SceneController.Instance.LoadScene(0);
     }
 }

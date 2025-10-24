@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
     private Camera cam;
     private Vector3 startDragPos;
 
-    private void Awake()
+    private void Start()
     {
         cam = GetComponent<Camera>();
     }

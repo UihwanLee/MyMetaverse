@@ -12,22 +12,20 @@ public class ChatUI : MonoBehaviour
     [SerializeField] private TMP_InputField inputField;
 
     private bool isChatting = false;
+    private PlayerController player;
 
-    public void Update()
+    private void Start()
     {
-        CheckInputChat();
+        player = GameManager.Instance.player;
+        inputField.onSubmit.AddListener(delegate { SendMessageToPlayer(); });
     }
 
-    private void CheckInputChat()
+    public void SendMessageToPlayer()
     {
-        if (inputField == null || inputField.text.Length == 0) return;
-
-        // 채팅 입력하고 엔터 키 입력 받았는 지 체크
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (player != null && inputField.text.Length > 0)
         {
             string message = inputField.text;
-            Debug.Log(message);
-            GameManager.Instance.player.SendMessageOnSpeechBubble(message);
+            player.SendMessageOnSpeechBubble(message);
             inputField.text = string.Empty;
         }
     }
