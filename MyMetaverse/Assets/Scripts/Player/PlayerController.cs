@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private SpeechBubbleHandler speechBubbleHandler;
 
+    private NPCInteractionHandler currentNPC;
 
     private void Awake()
     {
@@ -58,6 +59,11 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 dir = Vector3.ClampMagnitude(new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f), 1f);
         moveDirection = dir.normalized;
+
+        if (currentNPC != null && Input.GetKeyDown(KeyCode.F))
+        {
+            currentNPC.Interact();
+        }
     }
 
     #endregion
@@ -136,6 +142,30 @@ public class PlayerController : MonoBehaviour
         {
             speechBubbleHandler.gameObject.SetActive(true);
             speechBubbleHandler.StartSpeech(message);
+        }
+    }
+
+    #endregion
+
+    #region 충돌 처리
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        NPCInteractionHandler npc = collision.GetComponent<NPCInteractionHandler>();
+        if (npc != null)
+        {
+            currentNPC = npc;
+            npc.ShowInteractionUI(true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        NPCInteractionHandler npc = collision.GetComponent<NPCInteractionHandler>();
+        if (npc != null && npc == currentNPC)
+        {
+            npc.ShowInteractionUI(false);
+            currentNPC = null;
         }
     }
 
