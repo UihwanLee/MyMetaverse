@@ -5,28 +5,55 @@ using UnityEngine;
 public class PlaneController : MonoBehaviour
 {
     private Rigidbody2D _rigidbody;
+    private Animator animator;
 
     [Range(1f, 20f)][SerializeField] private float moveSpeed;
     [Range(1f, 20f)][SerializeField] private float jumpForce;
 
     private bool isJumping;
+    private bool isDead;
+    private float deathCooldown;
+
+    // 애니메이션 처리
+    private static readonly int IsDie = Animator.StringToHash("IsDie");
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        animator = GetComponentInChildren<Animator>();
 
+        isDead = false;
         isJumping = false;
+        deathCooldown = 1f;
     }
 
     private void Update()
     {
+        CheckDead();
         GetUserInput();
+    }
+
+    private void CheckDead()
+    {
+        if(isDead)
+        {
+            if(deathCooldown <= 0)
+            {
+
+            }
+            else
+            {
+                deathCooldown -= Time.deltaTime;
+            }
+        }  
     }
 
     #region 입력 처리
 
     private void GetUserInput()
     {
+        if (isDead) return;
+
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
             isJumping = true;
     }
@@ -42,6 +69,8 @@ public class PlaneController : MonoBehaviour
 
     private void Movement()
     {
+        if (isDead) return;
+
         Vector3 velocitiy = _rigidbody.velocity;
 
         // 평소에는 전진
@@ -62,5 +91,17 @@ public class PlaneController : MonoBehaviour
 
     #endregion
 
+    #region 충돌 처리
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (isDead) return;
+
+        // 아무 오브젝트이든 충돌하면 사망처리
+        isDead = true;
+
+        animator.SetInteger(IsDie, 1);
+    }
+
+    #endregion
 }
