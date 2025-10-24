@@ -25,7 +25,7 @@ public class NPCController : MonoBehaviour
             // F키를 누르면 Scene 전환
             bool isInteraction = Input.GetKeyDown(KeyCode.F);
             if (isInteraction)
-                SceneManager.LoadScene(1);
+                GameManager.Instance.StartMiniGame();
         }
     }
 

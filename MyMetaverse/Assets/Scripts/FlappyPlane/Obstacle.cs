@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Obstacle : MonoBehaviour
 {
@@ -12,6 +13,14 @@ public class Obstacle : MonoBehaviour
     [SerializeField] private float minOffsetDist;
     [SerializeField] private float maxOffsetDist;
     [SerializeField] private float padding;
+
+    // GameManager
+    private FlappyPlaneManager gameManager;
+
+    private void Start()
+    {
+        this.gameManager = FlappyPlaneManager.Instance;
+    }
 
     public Vector3 SetRandomPlace(Vector3 lastPosition)
     {
@@ -27,5 +36,12 @@ public class Obstacle : MonoBehaviour
 
         // Position РќДо
         return transform.position;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        PlaneController plane = collision.GetComponent<PlaneController>();
+        if (plane != null)
+            gameManager.AddScore(1);
     }
 }

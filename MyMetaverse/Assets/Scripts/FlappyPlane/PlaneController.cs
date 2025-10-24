@@ -12,40 +12,27 @@ public class PlaneController : MonoBehaviour
 
     private bool isJumping;
     private bool isDead;
-    private float deathCooldown;
 
     // 局聪皋捞记 贸府
     private static readonly int IsDie = Animator.StringToHash("IsDie");
 
-    private void Awake()
+    // GameManager
+    private FlappyPlaneManager gameManager;
+
+    private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>();
 
         isDead = false;
         isJumping = false;
-        deathCooldown = 1f;
+
+        this.gameManager = FlappyPlaneManager.Instance;
     }
 
     private void Update()
     {
-        CheckDead();
         GetUserInput();
-    }
-
-    private void CheckDead()
-    {
-        if(isDead)
-        {
-            if(deathCooldown <= 0)
-            {
-
-            }
-            else
-            {
-                deathCooldown -= Time.deltaTime;
-            }
-        }  
     }
 
     #region 涝仿 贸府
@@ -101,6 +88,8 @@ public class PlaneController : MonoBehaviour
         isDead = true;
 
         animator.SetInteger(IsDie, 1);
+
+        gameManager.GameOver();
     }
 
     #endregion
