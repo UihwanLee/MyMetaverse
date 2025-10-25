@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3956417895323785619}
   - component: {fileID: 5166550222564283481}
   - component: {fileID: 4368175995825995693}
+  - component: {fileID: 4884259915258816290}
   m_Layer: 5
   m_Name: ColorBtn
   m_TagString: Untagged
@@ -119,4 +120,28 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5166550222564283481}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &4884259915258816290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8754905909018196147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 508ea9c6b537d79458e5bf794745c62b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
