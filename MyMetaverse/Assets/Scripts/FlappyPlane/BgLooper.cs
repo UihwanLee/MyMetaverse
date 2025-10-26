@@ -9,22 +9,41 @@ public class BgLooper : MonoBehaviour
 
     [Header("Obsatcle Object")]
     [SerializeField] private Obstacle[] obstacles;
-    private Vector3 lastPosition;
+    private Vector3 lastPositionObstacle;
+
+    [Header("Coin Object")]
+    [SerializeField] private LayerMask coinLayer;
+    [SerializeField] private int coinCount = 20;
+    [SerializeField] private Coin coinPrefab;
+    private Vector3 lastPositionCoin;
 
     private void Start()
     {
         obstacles = GameObject.FindObjectsOfType<Obstacle>();
         PlaceAllObstacle();
+        PlaceAllCoins();
     }
 
     private void PlaceAllObstacle()
     {
         if(obstacles == null) return;
 
-        lastPosition = obstacles[0].transform.position;
+        lastPositionObstacle = obstacles[0].transform.position;
         for(int i=0; i<obstacles.Length; i++)
         {
-            lastPosition = obstacles[i].SetRandomPlace(lastPosition);
+            lastPositionObstacle = obstacles[i].SetRandomPlace(lastPositionObstacle);
+        }
+    }
+
+    private void PlaceAllCoins()
+    {
+        if (coinPrefab == null) return;
+
+        lastPositionCoin = new Vector3(3.5f, 0f, 0f);
+        for (int i=0; i<coinCount; i++)
+        {
+            var coin = Instantiate(coinPrefab).GetComponent<Coin>();
+            lastPositionCoin = coin.SetRandomPlace(lastPositionCoin);
         }
     }
 
@@ -43,10 +62,19 @@ public class BgLooper : MonoBehaviour
             return;
         }
 
+        Coin coin;
+        if ((coinLayer & (1 << collision.gameObject.layer)) != 0)
+        {
+            Debug.Log("코인 충돌!");
+            coin = collision.gameObject.GetComponent<Coin>();
+            coin.transform.gameObject.SetActive(true);
+            lastPositionCoin = coin.SetRandomPlace(lastPositionCoin);
+        }
+
         Obstacle obstacle = collision.gameObject.GetComponent<Obstacle>();
         if(obstacle)
         {
-            lastPosition = obstacle.SetRandomPlace(lastPosition);
+            lastPositionObstacle = obstacle.SetRandomPlace(lastPositionObstacle);
         }
     }
 }

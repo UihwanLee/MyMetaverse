@@ -4,13 +4,42 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    [Header("Setting Value")]
+    [SerializeField] private float minOffsetDist;
+    [SerializeField] private float maxOffsetDist;
+    [SerializeField] private float padding;
+
+    // GameManager
+    private FlappyPlaneManager gameManager;
+
+    private void Start()
+    {
+        this.gameManager = FlappyPlaneManager.Instance;
+    }
+
+    public Vector3 SetRandomPlace(Vector3 lastPosition)
+    {
+        // x 위치는 마지막 Coin에서 paddding 값만큼
+        float posX = lastPosition.x + padding;
+
+        // y 위치는 마지막 Coin 위치에서 랜덤 값만큼 조정
+        float randomY = Random.Range(minOffsetDist, maxOffsetDist);
+        float posY = lastPosition.y + randomY;
+
+        transform.position = new Vector3(posX, posY, 0);
+
+        // Position 전달
+        return transform.position;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerController player = collision.transform.GetComponent<PlayerController>();
-        if(player != null)
+        PlaneController plane = collision.GetComponent<PlaneController>();
+        if (plane != null)
         {
-
-            Destroy(this.gameObject);
+            // Plane과 충돌 시 비활성화
+            //this.gameObject.SetActive(false);
+            gameManager.AddCoin(5);
         }
     }
 }

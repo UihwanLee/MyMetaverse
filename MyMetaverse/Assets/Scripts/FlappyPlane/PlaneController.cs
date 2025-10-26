@@ -101,13 +101,6 @@ public class PlaneController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if ((coinLayerMask & (1 << collision.gameObject.layer)) != 0)
-        {
-            // 코인 흭득 시 코인 증가
-            Destroy(collision.gameObject);
-            return;
-        }
-
         if (isDead) return;
 
         // 아무 오브젝트이든 충돌하면 사망처리
