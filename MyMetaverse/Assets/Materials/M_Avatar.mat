@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Mannequin
+  m_Name: M_Avatar
   m_Shader: {fileID: -6465566751694194690, guid: 56a77a504c87c164cac60c2c908943e3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -70,10 +70,10 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _CapColor: {r: 1, g: 0.39999992, b: 0, a: 1}
-    - _ClothesColor: {r: 0.7, g: 0.19999993, b: 0, a: 1}
+    - _CapColor: {r: 1, g: 0.3, b: 0.9, a: 1}
+    - _ClothesColor: {r: 0.1, g: 0, b: 0.1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EyeColor: {r: 1, g: 0.4, b: 0, a: 1}
+    - _EyeColor: {r: 0, g: 0.10001256, b: 1, a: 0}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

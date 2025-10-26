@@ -26,8 +26,11 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        HandleZoom();
-        HandleMove();
+        if(GameManager.Instance.CurrentState == GameState.Playing)
+        {
+            HandleZoom();
+            HandleMove();
+        }
     }
 
     /// <summary>

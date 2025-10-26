@@ -85,8 +85,6 @@ public class CustomizeManager : MonoBehaviour
             CustomizingSlot currentSlot = customizingSlot;
             btn.onClick.AddListener(() => ChooseColor(currentSlot));
 
-            Debug.Log(customizingSlot.Idx);
-
             customizingSlotList.Add(customizingSlot);
         }
     }

@@ -18,8 +18,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 moveDirection;
     public Vector2 MoveDirection { get { return moveDirection; } }
 
-    public bool isMoving;
+    private bool isMoving;
     public bool IsMoving { get { return isMoving; } }
+
 
     [Header("Animation Info")]
 
@@ -42,12 +43,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.CurrentState != GameState.Playing) return;
+
         GetUserInput();
         UpdateAnimation();
     }
 
     private void FixedUpdate()
     {
+        if (GameManager.Instance.CurrentState != GameState.Playing) return;
+
         Move();
         Rotate();
     }

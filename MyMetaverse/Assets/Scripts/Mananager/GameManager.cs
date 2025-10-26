@@ -5,6 +5,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
+public enum GameState
+{
+    Playing,
+    UI_Active,
+    Event,
+}
+
 public class PlayerData
 {
     public Vector3 Position { get; set; }
@@ -29,6 +36,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private GameState currentState;
+    public GameState CurrentState { get { return currentState; } }
+
     private PlayerData playerData;
     public PlayerController Player { get; private set; }
 
@@ -45,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        currentState = GameState.Playing;
         Player = GameObject.FindObjectOfType<PlayerController>();
         playerData = new PlayerData(Player.transform.position, Player.GetComponentInChildren<SpriteRenderer>().material);
     }
@@ -71,6 +82,12 @@ public class GameManager : MonoBehaviour
     public void StartMiniGame()
     {
         SavePlayer();
+        ChangeGameState(GameState.Event);
         SceneController.Instance.LoadScene(1);
+    }
+
+    public void ChangeGameState(GameState state)
+    {
+        currentState |= state;
     }
 }
