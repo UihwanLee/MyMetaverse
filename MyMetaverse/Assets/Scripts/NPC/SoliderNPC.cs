@@ -11,6 +11,6 @@ public class SoliderNPC : MonoBehaviour, IInteractable
     {
         GameManager.Instance.ChangeGameState(GameState.UI_Active);
         customizingUI.SetActive(true);
-        customizeManager.InitAvatarColor();
+        customizeManager.InitCustomizing();
     }
 }
