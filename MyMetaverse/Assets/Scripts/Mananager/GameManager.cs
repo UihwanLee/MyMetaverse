@@ -88,6 +88,11 @@ public class GameManager : MonoBehaviour
 
     public void ChangeGameState(GameState state)
     {
-        currentState |= state;
+        currentState = state;
+    }
+
+    public void GameQuit()
+    {
+        Application.Quit();
     }
 }
