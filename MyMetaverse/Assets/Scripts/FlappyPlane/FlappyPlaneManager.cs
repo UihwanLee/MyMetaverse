@@ -13,6 +13,7 @@ public class FlappyPlaneManager : MonoBehaviour
 {
     private int bestScore;
     private int currentScore;
+    private int currentCoin;
 
     private FlappyPlaneUI gameUI;
     public FlappyPlaneUI GameUI {  get { return gameUI; } }
@@ -66,6 +67,12 @@ public class FlappyPlaneManager : MonoBehaviour
     {
         currentScore += score;
         gameUI.UpdateScore(currentScore);
+    }
+
+    public void AddCoin(int coin)
+    {
+        currentCoin += coin;
+        gameUI.UpdateCoin(currentCoin);
     }
 
     public void GameOver()

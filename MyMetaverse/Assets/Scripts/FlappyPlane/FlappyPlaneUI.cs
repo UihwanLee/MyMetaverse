@@ -12,7 +12,8 @@ public class FlappyPlaneUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI readyCountTxt;
 
     [Header("CanvasUI")]
-    [SerializeField] private TextMeshProUGUI scoreTxt;
+    [SerializeField] private GameObject coinUI;
+    [SerializeField] private GameObject scoreUI;
     [SerializeField] private GameObject gameOverUI;
     [SerializeField] private TextMeshProUGUI bestRecord;
     [SerializeField] private TextMeshProUGUI currentRecord;
@@ -24,7 +25,8 @@ public class FlappyPlaneUI : MonoBehaviour
         infoUI.SetActive(true);
         gameOverUI.SetActive(false);
         readyUI.SetActive(false);
-        scoreTxt.transform.gameObject.SetActive(false);
+        scoreUI.SetActive(false);
+        coinUI.SetActive(false);
     }
 
     public void StartReady(int readyCount)
@@ -49,13 +51,21 @@ public class FlappyPlaneUI : MonoBehaviour
 
         // 끝나면 ReadyUI 지우고 게임 시작
         readyUI.SetActive(false);
-        scoreTxt.transform.gameObject.SetActive(true);
+        scoreUI.SetActive(true);
+        coinUI.SetActive(true);
         FlappyPlaneManager.Instance.GameStart();
     }
 
     public void UpdateScore(int score)
     {
+        TextMeshProUGUI scoreTxt = scoreUI.GetComponentInChildren<TextMeshProUGUI>();
         scoreTxt.text = $"{score}점";
+    }
+
+    public void UpdateCoin(int coin)
+    {
+        TextMeshProUGUI coinTxt = coinUI.GetComponentInChildren<TextMeshProUGUI>();
+        coinTxt.text = coin.ToString();
     }
 
     public void GameOver(int bestScore, int score)

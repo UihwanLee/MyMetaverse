@@ -13,6 +13,9 @@ public class PlaneController : MonoBehaviour
     private bool isJumping;
     private bool isDead;
 
+    // 코인 LayerMask
+    [SerializeField] private LayerMask coinLayerMask;
+
     // 애니메이션 처리
     private static readonly int IsDie = Animator.StringToHash("IsDie");
 
@@ -98,6 +101,13 @@ public class PlaneController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if ((coinLayerMask & (1 << collision.gameObject.layer)) != 0)
+        {
+            // 코인 흭득 시 코인 증가
+            Destroy(collision.gameObject);
+            return;
+        }
+
         if (isDead) return;
 
         // 아무 오브젝트이든 충돌하면 사망처리
