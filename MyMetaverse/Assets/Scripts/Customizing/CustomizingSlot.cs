@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CustomizingSlot : MonoBehaviour
 {
-    public int Idx { get; set; }
-    public Sprite Img { get; set; }
+    [SerializeField] public int Idx { get; set; }
+    [SerializeField] public Sprite Img { get; set; }
 
     public void Init(int idx, Sprite img)
     {

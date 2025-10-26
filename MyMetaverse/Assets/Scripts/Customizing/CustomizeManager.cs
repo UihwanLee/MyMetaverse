@@ -72,7 +72,6 @@ public class CustomizeManager : MonoBehaviour
         for(int i=0; i<colorCount; i++)
         {
             var customizingSlot = Instantiate(customizingSlotPrefab, parent).GetComponent<CustomizingSlot>();
-            customizingSlot.Idx = i;
 
             Button btn = customizingSlot.GetComponent<Button>();
             Image colorImage = customizingSlot.transform.GetChild(0).GetComponent<Image>();
@@ -82,7 +81,11 @@ public class CustomizeManager : MonoBehaviour
             colorImage.sprite = typeSpriteList[0];
             colorImage.material = colorMat;
             colorMat.color = ColorData.GetColor(i);
-            btn.onClick.AddListener(() => ChooseColor(customizingSlot));
+
+            CustomizingSlot currentSlot = customizingSlot;
+            btn.onClick.AddListener(() => ChooseColor(currentSlot));
+
+            Debug.Log(customizingSlot.Idx);
 
             customizingSlotList.Add(customizingSlot);
         }
@@ -132,8 +135,10 @@ public class CustomizeManager : MonoBehaviour
 
     public void ChooseColor(CustomizingSlot slot)
     {
-        // 고른 색상으로 아바타 색상 변경
+        //// 고른 색상으로 아바타 색상 변경
         Material avatarMat = avatar.transform.GetComponent<Image>().material;
+
+        //Debug.Log(slot.Idx.ToString() + ColorData.GetColor(slot.Idx));
         if (avatarMat) avatarMat.SetColor(currentOption, ColorData.GetColor(slot.Idx));
     }
 
