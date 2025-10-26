@@ -70,8 +70,8 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _CapColor: {r: 1, g: 0.3, b: 0.9, a: 1}
-    - _ClothesColor: {r: 0.1, g: 0, b: 0.1, a: 1}
+    - _CapColor: {r: 1, g: 0.39999998, b: 0, a: 1}
+    - _ClothesColor: {r: 1, g: 0.9, b: 0.09999982, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EyeColor: {r: 0, g: 0.10001256, b: 1, a: 0}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}

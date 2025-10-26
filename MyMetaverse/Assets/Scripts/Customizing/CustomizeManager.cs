@@ -32,6 +32,7 @@ public class CustomizeManager : MonoBehaviour
     [SerializeField] private Button clothesBtn;
     [SerializeField] private Button eyeBtn;
     [SerializeField] private List<Sprite> typeSpriteList;
+    [SerializeField] private GameObject customizingUI;
 
     [Header("Avatar")]
     [SerializeField] private GameObject avatar;
@@ -150,6 +151,14 @@ public class CustomizeManager : MonoBehaviour
 
         Material playerMat = player.GetComponentInChildren<SpriteRenderer>().material;
         SetColorByPart(playerMat, capColor, clothesColor, eyeColor);
+
+        CloseCustomizingUI();
+    }
+
+    public void CloseCustomizingUI()
+    {
+        GameManager.Instance.ChangeGameState(GameState.Playing);
+        customizingUI.SetActive(false);
     }
 
     private void GetColorByPart(Material target, ref Color capColor, ref Color clothesColor, ref Color eyeColor)
