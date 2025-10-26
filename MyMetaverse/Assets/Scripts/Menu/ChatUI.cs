@@ -16,7 +16,7 @@ public class ChatUI : MonoBehaviour
 
     private void Start()
     {
-        player = GameManager.Instance.player;
+        player = GameManager.Instance.Player;
         inputField.onSubmit.AddListener(delegate { SendMessageToPlayer(); });
     }
 

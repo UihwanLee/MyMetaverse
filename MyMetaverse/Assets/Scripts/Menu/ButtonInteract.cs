@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class ButtonInteract : MonoBehaviour
 {
-    [SerializeField] private Color originColor;
-    [SerializeField] private Color pressedColor;
+    [SerializeField] private EColor origin;
+    [SerializeField] private EColor highlight;
 
     private bool onClick;
 
@@ -21,10 +21,8 @@ public class ButtonInteract : MonoBehaviour
     {
         onClick = !onClick;
 
-        Debug.Log("Pressed");
-        Color color = (onClick) ? pressedColor : originColor;
+        Color newColor = (onClick) ? ColorData.GetColor(highlight) : ColorData.GetColor(origin);
         Image img = GetComponent<Image>();
-        img.color = color;
-        Debug.Log(img.color);
+        img.color = newColor;
     }
 }

@@ -4,7 +4,14 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
-public static class CustomizingOption
+public enum ECustomizingOptionType
+{
+    CapOption,
+    ClothesOption,
+    EyeOption
+}
+
+public static class MaterialColorName
 {
     public static readonly string CapColor = "_CapColor";
     public static readonly string ClothesColor = "_ClothesColor";
@@ -17,40 +24,46 @@ public class CustomizeManager : MonoBehaviour
     [SerializeField] private Transform parent;
 
     [Header("Color Slot")]
-    [SerializeField] private List<CustomizingSlot> colorSlotList;
-    [SerializeField] private GameObject colorBtnPrefab;
+    [SerializeField] private List<CustomizingSlot> customizingSlotList;
+    [SerializeField] private GameObject customizingSlotPrefab;
+
+    [Header("Customizing Button UI")]
+    [SerializeField] private Button capBtn;
+    [SerializeField] private Button clothesBtn;
+    [SerializeField] private Button eyeBtn;
+    [SerializeField] private List<Sprite> typeSpriteList;
 
     [Header("Avatar")]
     [SerializeField] private GameObject avatar;
 
     private int colorCount;
+    private PlayerController player;
+
+    private ECustomizingOptionType currentOptionType;
     private string currentOption;
 
     private void Start()
     {
-        colorSlotList.Clear();
-        colorCount = PlayerColor.GetColorCount();
-        SetCustomizeColor();
+        customizingSlotList.Clear();
+        colorCount = 12;
 
-        currentOption = CustomizingOption.CapColor;
+        currentOption = MaterialColorName.CapColor;
+        player = GameManager.Instance.Player;
+
+        SetCustomizeColor();
+        ChoiceCustomizingOption(0);
     }
 
-    public void SetCutomizingOption(int option)
+    public void InitAvatarColor()
     {
-        switch (option)
-        {
-            case 0:
-                currentOption = CustomizingOption.CapColor;
-                break;
-            case 1:
-                currentOption = CustomizingOption.ClothesColor;
-                break;
-            case 2:
-                currentOption = CustomizingOption.EyeColor;
-                break;
-            default:
-                break;
-        }
+        // 현재 Player 옷 색상 기준으로 Avatar 색상 변경
+        Color capColor = Color.white, clothesColor = Color.white, eyeColor = Color.white;
+
+        Material playerMat = player.GetComponentInChildren<SpriteRenderer>().material;
+        GetColorByPart(playerMat, ref capColor, ref clothesColor, ref eyeColor);
+
+        Material avatarMat = avatar.transform.GetComponent<Image>().material;
+        SetColorByPart(avatarMat, capColor, clothesColor, eyeColor);
     }
 
     public void SetCustomizeColor()
@@ -58,66 +71,95 @@ public class CustomizeManager : MonoBehaviour
         // 12가지 컬러 속성 지정
         for(int i=0; i<colorCount; i++)
         {
-            var customizingSlot = Instantiate(colorBtnPrefab, parent).GetComponent<CustomizingSlot>();
+            var customizingSlot = Instantiate(customizingSlotPrefab, parent).GetComponent<CustomizingSlot>();
             customizingSlot.Idx = i;
 
             Button btn = customizingSlot.GetComponent<Button>();
-            Image colorImage = customizingSlot.GetComponent<Image>();
+            Image colorImage = customizingSlot.transform.GetChild(0).GetComponent<Image>();
             Material colorMat = new Material(colorImage.material);
 
             customizingSlot.Idx = i;
+            colorImage.sprite = typeSpriteList[0];
             colorImage.material = colorMat;
-            colorMat.color = PlayerColor.GetColor(i);
+            colorMat.color = ColorData.GetColor(i);
             btn.onClick.AddListener(() => ChooseColor(customizingSlot));
 
-            colorSlotList.Add(customizingSlot);
+            customizingSlotList.Add(customizingSlot);
         }
     }
 
-    public void InitAvatarColor()
+    public void ChoiceCustomizingOption(int option)
     {
-        // 현재 Player 옷 색상 기준으로 Avatar 색상 변경
-        Color capColor, clothesColor, eyeColor;
-        PlayerController player = GameManager.Instance.player;
-        if (player)
-        {
-            Material playerMat = player.GetComponentInChildren<SpriteRenderer>().material;
-            capColor = playerMat.GetColor(CustomizingOption.CapColor);
-            clothesColor = playerMat.GetColor(CustomizingOption.ClothesColor);
-            eyeColor = playerMat.GetColor(CustomizingOption.EyeColor);
-            playerMat.SetColor(CustomizingOption.CapColor, capColor);
-            playerMat.SetColor(CustomizingOption.ClothesColor, clothesColor);
-            playerMat.SetColor(CustomizingOption.EyeColor, eyeColor);
+        // 커스터마이징 옵션 선택 : Cap, Clothes, Eye
 
-            Material mat = avatar.transform.GetComponent<Image>().material;
-            mat.SetColor(CustomizingOption.CapColor, capColor);
-            mat.SetColor(CustomizingOption.ClothesColor, clothesColor);
-            mat.SetColor(CustomizingOption.EyeColor, eyeColor);
+        ECustomizingOptionType type = (ECustomizingOptionType)option;
+
+        capBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
+        clothesBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
+        eyeBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
+
+        currentOptionType = type;
+        switch (type)
+        {
+            case ECustomizingOptionType.CapOption:
+                currentOption = MaterialColorName.CapColor;
+                capBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
+                break;
+            case ECustomizingOptionType.ClothesOption:
+                currentOption = MaterialColorName.ClothesColor;
+                clothesBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
+                break;
+            case ECustomizingOptionType.EyeOption:
+                currentOption = MaterialColorName.EyeColor;
+                eyeBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
+                break;
+            default:
+                break;
+        }
+
+        ChangeCustomizingSlotImage();
+    }
+
+    private void ChangeCustomizingSlotImage()
+    {
+        int index = (int)currentOptionType;
+        for(int i=0; i<customizingSlotList.Count; i++)
+        {
+            Image img = customizingSlotList[i].transform.GetChild(0).GetComponent<Image>();
+            img.sprite = typeSpriteList[index];
         }
     }
 
     public void ChooseColor(CustomizingSlot slot)
     {
         // 고른 색상으로 아바타 색상 변경
-        Material mat = avatar.transform.GetComponent<Image>().material;
-        if (mat) mat.SetColor(currentOption, PlayerColor.GetColor(slot.Idx));
+        Material avatarMat = avatar.transform.GetComponent<Image>().material;
+        if (avatarMat) avatarMat.SetColor(currentOption, ColorData.GetColor(slot.Idx));
     }
 
     public void Confirm()
     {
         // 최종 결정
-        Material mat = avatar.transform.GetComponent<Image>().material;
-        Color capColor = mat.GetColor(CustomizingOption.CapColor);
-        Color clothesColor = mat.GetColor(CustomizingOption.ClothesColor);
-        Color eyeColor = mat.GetColor(CustomizingOption.EyeColor);
+        Color capColor = Color.white, clothesColor = Color.white, eyeColor = Color.white;
 
-        PlayerController player = GameManager.Instance.player;
-        if(player)
-        {
-            Material playerMat = player.GetComponentInChildren<SpriteRenderer>().material;
-            playerMat.SetColor(CustomizingOption.CapColor, capColor);
-            playerMat.SetColor(CustomizingOption.ClothesColor, clothesColor);
-            playerMat.SetColor(CustomizingOption.EyeColor, eyeColor);
-        }
+        Material avatarMat = avatar.transform.GetComponent<Image>().material;
+        GetColorByPart(avatarMat, ref capColor, ref clothesColor, ref eyeColor);
+
+        Material playerMat = player.GetComponentInChildren<SpriteRenderer>().material;
+        SetColorByPart(playerMat, capColor, clothesColor, eyeColor);
+    }
+
+    private void GetColorByPart(Material target, ref Color capColor, ref Color clothesColor, ref Color eyeColor)
+    {
+        capColor = target.GetColor(MaterialColorName.CapColor);
+        clothesColor = target.GetColor(MaterialColorName.ClothesColor);
+        eyeColor = target.GetColor(MaterialColorName.EyeColor);
+    }
+
+    private void SetColorByPart(Material target, Color capColor, Color clothesColor, Color eyeColor)
+    {
+        target.SetColor(MaterialColorName.CapColor, capColor);
+        target.SetColor(MaterialColorName.ClothesColor, clothesColor);
+        target.SetColor(MaterialColorName.EyeColor, eyeColor);
     }
 }
