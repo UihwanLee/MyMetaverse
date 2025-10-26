@@ -17,6 +17,7 @@ public class FlappyPlaneUI : MonoBehaviour
     [SerializeField] private GameObject gameOverUI;
     [SerializeField] private TextMeshProUGUI bestRecord;
     [SerializeField] private TextMeshProUGUI currentRecord;
+    [SerializeField] private TextMeshProUGUI gainCoin;
 
 
     private void Start()
@@ -68,10 +69,11 @@ public class FlappyPlaneUI : MonoBehaviour
         coinTxt.text = coin.ToString();
     }
 
-    public void GameOver(int bestScore, int score)
+    public void GameOver(int bestScore, int score, int coin)
     {
         gameOverUI.SetActive(true);
         bestRecord.text = $"{bestScore}Á¡";
         currentRecord.text = $"{score}Á¡";
+        gainCoin.text = coin.ToString();
     }
 }

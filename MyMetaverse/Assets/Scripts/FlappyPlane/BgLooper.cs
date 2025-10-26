@@ -65,9 +65,8 @@ public class BgLooper : MonoBehaviour
         Coin coin;
         if ((coinLayer & (1 << collision.gameObject.layer)) != 0)
         {
-            Debug.Log("코인 충돌!");
             coin = collision.gameObject.GetComponent<Coin>();
-            coin.transform.gameObject.SetActive(true);
+            coin.Animator.SetBool("IsGetCoin", false);
             lastPositionCoin = coin.SetRandomPlace(lastPositionCoin);
         }
 

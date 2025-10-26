@@ -6,9 +6,8 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D _rigidbody;
-
     [Header("Component")]
+    private Rigidbody2D _rigidbody;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
     [Header("State Info")]
@@ -28,6 +27,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("SpeechBubble Info")]
     [SerializeField] private SpeechBubbleHandler speechBubbleHandler;
+
+    private int currentCoin;
+    public int CurrentCoin { get { return currentCoin; } set { currentCoin = value; } }
 
 
     // 局聪皋捞记 贸府

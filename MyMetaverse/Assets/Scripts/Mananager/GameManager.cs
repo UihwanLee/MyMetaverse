@@ -17,10 +17,13 @@ public class PlayerData
     public Vector3 Position { get; set; }
     public Material PlayerMaterial { get; set; }
 
-    public PlayerData(Vector3 position, Material material)
+    public int PlayerCoin { get; set; }
+
+    public PlayerData(Vector3 position, Material material, int coin)
     {
         Position = position;
         PlayerMaterial = material;
+        PlayerCoin = coin;
     }
 }
 
@@ -42,6 +45,7 @@ public class GameManager : MonoBehaviour
     private PlayerData playerData;
     public PlayerController Player { get; private set; }
 
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -57,15 +61,17 @@ public class GameManager : MonoBehaviour
     {
         currentState = GameState.Playing;
         Player = GameObject.FindObjectOfType<PlayerController>();
-        playerData = new PlayerData(Player.transform.position, Player.GetComponentInChildren<SpriteRenderer>().material);
+        playerData = new PlayerData(Player.transform.position, Player.GetComponentInChildren<SpriteRenderer>().material, Player.CurrentCoin);
     }
 
     public void SavePlayer()
     {
         Vector3 pos = Player.transform.position;
         Material material = Player.GetComponentInChildren<SpriteRenderer>().material;
+        int coin = Player.CurrentCoin;
         playerData.Position = pos;
         playerData.PlayerMaterial = material;
+        playerData.PlayerCoin = coin;
     }
 
     public void UpdatePlayer(PlayerController player)
@@ -76,6 +82,7 @@ public class GameManager : MonoBehaviour
         {
             this.Player.transform.position = playerData.Position;
             this.Player.GetComponentInChildren<SpriteRenderer>().material = playerData.PlayerMaterial;
+            this.Player.CurrentCoin = playerData.PlayerCoin;
         }
     }
 
@@ -89,6 +96,11 @@ public class GameManager : MonoBehaviour
     public void ChangeGameState(GameState state)
     {
         currentState = state;
+    }
+
+    public void UpdateCoin(int coin)
+    {
+        playerData.PlayerCoin += coin;
     }
 
     public void GameQuit()

@@ -9,11 +9,18 @@ public class Coin : MonoBehaviour
     [SerializeField] private float maxOffsetDist;
     [SerializeField] private float padding;
 
+    [SerializeField] private int coinValue = 5;
+
+    private readonly int IsGetCoin = Animator.StringToHash("IsGetCoin");
+    private Animator animator;
+    public Animator Animator {  get { return animator; } }
+
     // GameManager
     private FlappyPlaneManager gameManager;
 
     private void Start()
     {
+        animator = GetComponentInChildren<Animator>();
         this.gameManager = FlappyPlaneManager.Instance;
     }
 
@@ -37,9 +44,9 @@ public class Coin : MonoBehaviour
         PlaneController plane = collision.GetComponent<PlaneController>();
         if (plane != null)
         {
-            // Plane과 충돌 시 비활성화
-            //this.gameObject.SetActive(false);
-            gameManager.AddCoin(5);
+            // Plane과 충돌 시 Get 애니메이션 적용
+            animator.SetBool(IsGetCoin, true);
+            gameManager.AddCoin(coinValue);
         }
     }
 }

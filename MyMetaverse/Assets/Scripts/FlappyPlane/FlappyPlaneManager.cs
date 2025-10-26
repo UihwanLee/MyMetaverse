@@ -81,7 +81,7 @@ public class FlappyPlaneManager : MonoBehaviour
         CheckRecord();
 
         // 게임 종료 시 현재 점수와 최고 점수를 넘겨준다.
-        gameUI.GameOver(bestScore, currentScore);
+        gameUI.GameOver(bestScore, currentScore, currentCoin);
     }
 
     private void CheckRecord()
@@ -100,7 +100,13 @@ public class FlappyPlaneManager : MonoBehaviour
     }
 
     public void Return()
-    {
+    {   
+        // GameManager에게 Coin 정보 전달
+        GameManager.Instance.UpdateCoin(currentCoin);
+
+        // GameManager State 변경
+        GameManager.Instance.ChangeGameState(GameState.Playing);
+
         SceneController.Instance.LoadScene(0);
     }
 }
