@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum MiniGameState
+{
+    Ready,
+    GameStart
+}
+
 public class FlappyPlaneManager : MonoBehaviour
 {
     private int bestScore;
@@ -13,16 +19,20 @@ public class FlappyPlaneManager : MonoBehaviour
 
     private PlaneController plane;
 
-    [SerializeField] private float countdownTime = 3f;
+    [SerializeField] private int readyCount = 3;
 
     private static FlappyPlaneManager instance;
     public static FlappyPlaneManager Instance { get { return instance; } }
+
+    private MiniGameState currentGameState;
+    public MiniGameState CurrentGameState { get { return currentGameState; } }
 
     private readonly string bestScoreKey = "BestScore";
 
     private void Awake()
     {
         instance = this;
+        currentGameState = MiniGameState.Ready;
     }
 
     private void Start()
@@ -38,6 +48,18 @@ public class FlappyPlaneManager : MonoBehaviour
 
         currentScore = 0;
         bestScore = 0;
+
+
+    }
+
+    public void GameReady()
+    {
+        gameUI.StartReady(readyCount);
+    }
+
+    public void GameStart()
+    {
+        currentGameState = MiniGameState.GameStart;
     }
 
     public void AddScore(int score)

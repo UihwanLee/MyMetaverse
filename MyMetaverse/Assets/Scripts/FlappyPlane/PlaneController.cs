@@ -32,6 +32,8 @@ public class PlaneController : MonoBehaviour
 
     private void Update()
     {
+        if (FlappyPlaneManager.Instance.CurrentGameState == MiniGameState.Ready) return;
+
         GetUserInput();
     }
 
@@ -49,10 +51,24 @@ public class PlaneController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        SetGameReady();
+
+        if (FlappyPlaneManager.Instance.CurrentGameState == MiniGameState.Ready) return;
+
         Movement();
     }
 
     #region 동작 처리
+
+    private void SetGameReady()
+    {
+        // 게임 준비 상태라면 Rigidbody kinematic으로 변경
+        MiniGameState state = FlappyPlaneManager.Instance.CurrentGameState;
+
+        RigidbodyType2D bodyType = (state == MiniGameState.Ready) ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+
+        this._rigidbody.bodyType = bodyType;
+    }
 
     private void Movement()
     {
