@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,8 +36,12 @@ public class CustomizeManager : MonoBehaviour
     [SerializeField] private Button capBtn;
     [SerializeField] private Button clothesBtn;
     [SerializeField] private Button eyeBtn;
-    [SerializeField] private List<Sprite> typeSpriteList;
     [SerializeField] private GameObject customizingUI;
+
+    [Header("Purchase")]
+    [SerializeField] private Transform purchaseSlotParent;
+    [SerializeField] private GameObject purchaseSlotPrefab;
+    [SerializeField] private TextMeshProUGUI totalPriceTxt;
 
     [Header("Avatar")]
     [SerializeField] private GameObject avatar;
@@ -72,7 +77,7 @@ public class CustomizeManager : MonoBehaviour
             Material colorMat = new Material(colorImage.material);
 
             customizingSlot.Idx = i;
-            colorImage.sprite = typeSpriteList[0];
+            colorImage.sprite = customizingOptionDataList[0].sprite;
             colorImage.material = colorMat;
             colorMat.color = ColorData.GetColor(i);
             customizingSlot.transform.GetChild(0).gameObject.SetActive(false);
@@ -107,7 +112,12 @@ public class CustomizeManager : MonoBehaviour
 
         SetCustomizingBanSlotByPlayerCurrentColor();
         ChoiceCustomizingOption(0);
+        UpdatePurchaseSlot();
     }
+
+    #endregion
+
+    #region 커스터마이징 System
 
     /// <summary>
     /// 부위 별 Player 일치 슬롯 Ban Idx 저장
@@ -116,23 +126,19 @@ public class CustomizeManager : MonoBehaviour
     {
         // 옵션 별로 Player 현재 색상과 일치하는 색상 슬롯은 Ban Slot Idx에 저장
 
-        foreach(var part in customizingOptionDataList)
+        foreach (var part in customizingOptionDataList)
         {
             for (int i = 0; i < customizingSlotList.Count; i++)
             {
                 Color slotColor = customizingSlotList[i].transform.GetChild(2).GetComponent<Image>().material.color;
                 if (slotColor.Equals(part.originColor))
                 {
-                    part.banSlotIdx = i;             
+                    part.banSlotIdx = i;
                     break;
                 }
             }
         }
     }
-
-    #endregion
-
-    #region 커스터마이징 System
 
     /// <summary>
     /// 커스터마이징 옵션 선택
@@ -193,26 +199,103 @@ public class CustomizeManager : MonoBehaviour
         customizingSlotList[banIdx].transform.GetChild(3).gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// 원래 색상으로 되돌리기
+    /// </summary>
+    public void Revart()
+    {
+        // 원래 색상으로 전체 되돌리기
+        Material avatarMat = avatar.transform.GetComponent<Image>().material;
+        foreach (var part in customizingOptionDataList)
+        {
+            part.selectSlotIdx = -1;
+            SetColorByPart(avatarMat, part.materialName, part.originColor);
+        }
+
+        UpdatePurchaseSlot();
+        UpdateSlotsByClickSlot(-1);
+    }
+
     #endregion
 
-    #region UI 버튼 동작
+    #region 슬롯 선택
 
     /// <summary>
     /// 슬롯을 클릭하였을 때 해당 색상 반영
     /// </summary>
     public void ChooseColor(CustomizingSlot slot)
     {
+        Material avatarMat = avatar.transform.GetComponent<Image>().material;
+
+        // 똑같은 슬롯 골랐는지 확인
+        if (slot.Idx == currentOption.selectSlotIdx)
+        {
+            ChooseSameColorSlot(avatarMat);
+            return;
+        }
+
+        ChooseDifferentColorSlot(avatarMat, slot);
+    }
+
+    // 기존에 똑같은 색상 슬롯을 고를시
+    private void ChooseSameColorSlot(Material avatarMat)
+    {
+        // 똑같은 슬롯 설정하면 선택 해제하고 기존 색상으로 돌아가기
+        currentOption.selectSlotIdx = -1;
+        avatarMat.SetColor(currentOption.materialName, currentOption.originColor);
+        UpdateSlotsByClickSlot(-1);
+
+        UpdatePurchaseSlot();
+    }
+
+    // 기존과 다른 색상 슬롯 고를시
+    private void ChooseDifferentColorSlot(Material avatarMat, CustomizingSlot slot)
+    {
         // Highlight 추가
         UpdateSlotsByClickSlot(slot.Idx);
 
         //// 고른 색상으로 아바타 색상 변경
         Color changeColor = ColorData.GetColor(slot.Idx);
-        Material avatarMat = avatar.transform.GetComponent<Image>().material;
         avatarMat.SetColor(currentOption.materialName, changeColor);
 
         // 현재 선택한 Slot 정보 Option 정보에 저장
         currentOption.selectSlotIdx = slot.Idx;
         currentOption.changeColor = changeColor;
+
+        UpdatePurchaseSlot();
+    }
+
+    #endregion
+
+    #region UI 업데이트
+
+    /// <summary>
+    /// 구매 항목 수정
+    /// </summary>
+    private void UpdatePurchaseSlot()
+    {
+        // purchaseSlotParent에 위치 해 있는 자식 오브젝트 삭제
+        int childCount = purchaseSlotParent.childCount;
+        for (int i = childCount - 1; i >= 0; i--)
+        {
+            Destroy(purchaseSlotParent.GetChild(i).gameObject);
+        }
+
+        int totalPrice = 0;
+
+        foreach (var part in customizingOptionDataList)
+        {
+            if(part.selectSlotIdx != -1)
+            {
+                // purchaseSlotParent에 purchaseSlotPrefab 생성
+                var purchaseSlot = Instantiate(purchaseSlotPrefab, purchaseSlotParent);
+                purchaseSlot.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"커스터마이징 - {part.name}";
+                purchaseSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{part.price}G";
+                totalPrice += part.price;
+            }
+        }
+
+        totalPriceTxt.text = totalPrice.ToString();
     }
 
     /// <summary>
@@ -233,39 +316,22 @@ public class CustomizeManager : MonoBehaviour
         customizingSlotList[idx].transform.GetChild(1).GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
     }
 
-    /// <summary>
-    /// 원래 색상으로 되돌리기
-    /// </summary>
-    public void Revart()
-    {
-        // 원래 색상으로 전체 되돌리기
-        Material avatarMat = avatar.transform.GetComponent<Image>().material;
-        foreach(var part in customizingOptionDataList)
-        {
-            SetColorByPart(avatarMat, part.materialName, part.originColor);
-        }
-    }
+    #endregion
+
+    #region 구매
 
     /// <summary>
     /// 구매 시도
     /// </summary>
     public void TryPurchase()
     {
-        int totalPirce = 0;
-
-        foreach(var choice in customizingOptionDataList)
-        {
-            if(choice.selectSlotIdx != -1)
-            {
-                // 선택한 항목이 있다면 price 추가
-                totalPirce += choice.price;
-            }
-        }
+        int totalPirce = int.Parse(totalPriceTxt.text);
 
         // 구매 비용이 부족하다면 NoticeUI 띄우기
-        if(totalPirce < GameManager.Instance.Player.CurrentCoin)
+        int playerCoin = GameManager.Instance.Player.CurrentCoin;
+        if (totalPirce > playerCoin)
         {
-            Debug.Log("돈이 부족합니다!");
+            NoticeUI.Instacne.Notice("코인이 부족합니다!");
             return;
         }
 

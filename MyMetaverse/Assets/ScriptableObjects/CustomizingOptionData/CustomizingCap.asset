@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: CustomizingCap
   m_EditorClassIdentifier: 
   type: 0
+  optionName: Cap
   sprite: {fileID: 21300000, guid: 725ec193b6a8dd8488a64c7f728710d2, type: 3}
   materialName: _CapColor
   selectSlotIdx: 0
+  originColor: {r: 0, g: 0, b: 0, a: 0}
+  changeColor: {r: 0, g: 0, b: 0, a: 0}
+  banSlotIdx: 0
+  price: 400

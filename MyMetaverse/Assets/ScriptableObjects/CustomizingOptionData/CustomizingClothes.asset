@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: CustomizingClothes
   m_EditorClassIdentifier: 
   type: 1
+  optionName: Clothes
   sprite: {fileID: 21300000, guid: 3fd6dd1f5a645e2419be0af4c2c1bb4b, type: 3}
   materialName: _ClothesColor
   selectSlotIdx: 0
+  originColor: {r: 0, g: 0, b: 0, a: 0}
+  changeColor: {r: 0, g: 0, b: 0, a: 0}
+  banSlotIdx: 0
+  price: 400
