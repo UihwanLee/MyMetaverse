@@ -45,8 +45,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.CurrentState != GameState.Playing) return;
-
         GetUserInput();
         UpdateAnimation();
     }
@@ -66,6 +64,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void GetUserInput()
     {
+        // Dialog 상호작용
+        if (currentNPC != null && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButton(0)) && GameManager.Instance.CurrentState == GameState.Dialog)
+        {
+            currentNPC.InteractDialog();
+        }
+
+        if (GameManager.Instance.CurrentState != GameState.Playing) return;
+
         Vector3 dir = Vector3.ClampMagnitude(new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f), 1f);
         moveDirection = dir.normalized;
 
@@ -73,12 +79,6 @@ public class PlayerController : MonoBehaviour
         if (currentNPC != null && Input.GetKeyDown(KeyCode.F))
         {
             currentNPC.Interact();
-        }
-
-        // Dialog 상호작용
-        if(currentNPC != null && (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButton(0)) && GameManager.Instance.CurrentState == GameState.Dialog)
-        {
-            currentNPC.InteractDialog();
         }
     }
 
@@ -114,6 +114,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void UpdateAnimation()
     {
+        if (GameManager.Instance.CurrentState != GameState.Playing) return;
         if (animator == null) return;
 
         bool isMove = moveDirection.sqrMagnitude > 0.01f;

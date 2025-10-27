@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class TypingEffect : MonoBehaviour
 {
-    [SerializeField] private float typingSpeed = 0.1f;
+    [SerializeField] private float typingDelay = 0.1f;
 
     private WaitForSeconds tyingDelay;
 
@@ -14,7 +14,7 @@ public class TypingEffect : MonoBehaviour
 
     private void Start()
     {
-        tyingDelay = new WaitForSeconds(typingSpeed);
+        tyingDelay = new WaitForSeconds(typingDelay);
     }
 
     public void Typing(TextMeshProUGUI textUI, string message, Action onCompleted)

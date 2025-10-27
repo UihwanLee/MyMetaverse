@@ -37,8 +37,6 @@ public class DialogManager : MonoBehaviour
         List<string> messageList = dialog.dialogList;
         foreach(string message in messageList) 
             dialogQueue.Enqueue(message);
-
-        Debug.Log("Dialog 세팅 끝!");
     }
 
     public bool StartDialogTyping()
@@ -50,8 +48,6 @@ public class DialogManager : MonoBehaviour
         string message = dialogQueue.Dequeue();
         dialogUI.StartDialog(message);
 
-        Debug.Log("Dialog 타이핑");
-
         return false;
     }
 
@@ -59,7 +55,6 @@ public class DialogManager : MonoBehaviour
     {
         // Dialog Typing이 끝나면 TypingDone로 변환
         currentState = DialogState.TypingDone;
-        Debug.Log("Dialog 타이핑 끝");
     }
 
     /// <summary>
@@ -78,13 +73,13 @@ public class DialogManager : MonoBehaviour
             {
                 dialogUI.ShowAllOptionBtn();
                 currentState = DialogState.DialogDone;
-                Debug.Log("모든 대화 끝");
             }
         }
     }
 
     public void OnOptionSelected(int index)
     {
+        GameManager.Instance.ChangeGameState(GameState.Playing);
         switch (index)
         {
             case 0:
@@ -92,6 +87,7 @@ public class DialogManager : MonoBehaviour
                 break;
             case 1:
                 // CustomizingUI 보여주기
+                GameManager.Instance.ChangeGameState(GameState.Event);
                 CustomizeManager.Instance.OpenCustomizingUI();
                 CustomizeManager.Instance.InitCustomizing();
                 break;
@@ -102,9 +98,11 @@ public class DialogManager : MonoBehaviour
                 GameManager.Instance.StartMiniGame2();
                 break;
             default:
+                Debug.LogWarning("There is No Dialog Option Click Event");
                 break;
         }
 
+        dialogUI.gameObject.SetActive(false);
         currentState = DialogState.None;
     }
 }

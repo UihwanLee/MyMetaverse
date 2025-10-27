@@ -16,11 +16,10 @@ public class DialogUI : MonoBehaviour
     [SerializeField] private DialogManager dialogManager;
     [SerializeField] private TypingEffect typer;
 
-    private int optionCount;
+    [SerializeField] private int optionCount;
 
     private void Start()
     {
-        optionCount = 0;
         typer = GetComponent<TypingEffect>();
     }
 
@@ -30,35 +29,30 @@ public class DialogUI : MonoBehaviour
         npcImg.sprite = sprite;
         npcName.text = name;
 
-        Debug.Log("끝??");
-
         // Option Btn Setting
         SetDialogOptionBtn(optionList, optionIdxList);
     }
 
     private void SetDialogOptionBtn(List<string> optionList, List<int> optionIdxList)
     {
-        optionCount = optionList.Count;
-
-        Debug.Log("끝???");
+        this.optionCount = optionList.Count;
         for (int i = 0; i < optionBtnList.Count; i++)
         {
             if (i < optionCount)
             {
+                int buttonIndex = i;
                 optionBtnList[i].gameObject.SetActive(true);
+                optionBtnList[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = optionList[i];
                 optionBtnList[i].onClick.RemoveAllListeners();
-                optionBtnList[i].transform.GetComponent<TextMeshProUGUI>().text = optionList[i];
                 optionBtnList[i].onClick.AddListener(() =>
                 {
-                    // DialogManager의 메서드를 호출하고 선택된 버튼의 인덱스(buttonIndex)를 전달
-                    dialogManager.OnOptionSelected(optionIdxList[i]);
+                    // DialogManager의 OnOptionSelected 호출하도록 설정
+                    dialogManager.OnOptionSelected(optionIdxList[buttonIndex]);
                 });
                 optionBtnList[i].gameObject.SetActive(false);
             }
             else
                 optionBtnList[i].gameObject.SetActive(false);
-
-            Debug.Log($"끝??{i}");
         }
     }
 
@@ -73,7 +67,7 @@ public class DialogUI : MonoBehaviour
 
     public void ShowAllOptionBtn()
     {
-        for(int i=0; i<optionCount; i++)
+        for (int i=0; i<optionCount; i++)
         {
             optionBtnList[i].gameObject.SetActive(true);
         }
