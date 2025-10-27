@@ -89,7 +89,6 @@ public class GameManager : MonoBehaviour
     public void SetCurrentMiniGame(MiniGameBase miniGame)
     {
         this.currentMiniGame = miniGame;
-        Debug.Log($"GameManager: {miniGame.MiniGameName} 미니게임이 현재 게임으로 설정되었습니다.");
     }
 
     public void StartMiniGame()

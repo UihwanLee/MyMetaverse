@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class MiniGameBase : MonoBehaviour
 {
@@ -11,20 +12,28 @@ public abstract class MiniGameBase : MonoBehaviour
     protected MiniGameState currentGameState;
     public MiniGameState CurrentGameState { get { return currentGameState; } set { currentGameState = value; } }
 
-    private int bestScore;
-    private int currentScore;
-    private int currentCoin;
+    protected int bestScore;
+    protected int currentScore;
+    protected int currentCoin;
 
-    [SerializeField] private int readyCount = 3;
+    [SerializeField] protected int readyCount = 3;
+
+    [SerializeField] protected MiniGameBaseUI gameUI;
 
     public virtual void Init(GameManager gm)
     {
         mainGameManager = gm;
     }
 
+    public virtual void Start()
+    {
+        currentScore = 0;
+        bestScore = 0;
+    }
+
     public virtual void GameReady()
     {
-        //gameUI.StartReady(readyCount);
+        gameUI.StartReady(readyCount);
     }
 
     public virtual void GameStart()
@@ -35,13 +44,13 @@ public abstract class MiniGameBase : MonoBehaviour
     public virtual void AddScore(int score)
     {
         currentScore += score;
-        //gameUI.UpdateScore(currentScore);
+        gameUI.UpdateScore(currentScore);
     }
 
     public virtual void AddCoin(int coin)
     {
         currentCoin += coin;
-        //gameUI.UpdateCoin(currentCoin);
+        gameUI.UpdateCoin(currentCoin);
     }
 
     public virtual void GameOver()
@@ -50,22 +59,17 @@ public abstract class MiniGameBase : MonoBehaviour
         CheckRecord();
 
         // 게임 종료 시 현재 점수와 최고 점수를 넘겨준다.
-        //gameUI.GameOver(bestScore, currentScore, currentCoin);
+        gameUI.GameOver(bestScore, currentScore, currentCoin);
     }
 
-    private void CheckRecord()
+    public virtual void CheckRecord()
     {
-        //bestScore = PlayerPrefs.GetInt(bestScoreKey);
-        //if (currentScore > bestScore)
-        //{
-        //    PlayerPrefs.SetInt(bestScoreKey, currentScore);
-        //}
-        //bestScore = PlayerPrefs.GetInt(bestScoreKey);
     }
 
     public void RestartGame()
     {
-        SceneController.Instance.LoadScene(2);
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneController.Instance.LoadScene(currentSceneIndex);
     }
 
     public void Return()

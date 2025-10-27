@@ -557,8 +557,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1285324617}
-        m_TargetAssemblyTypeName: FallSurviveManager, Assembly-CSharp
+      - m_Target: {fileID: 1285324619}
+        m_TargetAssemblyTypeName: MiniGameBase, Assembly-CSharp
         m_MethodName: GameReady
         m_Mode: 1
         m_Arguments:
@@ -3244,7 +3244,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 712887444}
-  - {fileID: 984313322}
   m_Father: {fileID: 2146069216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3296,8 +3295,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1285324617}
-        m_TargetAssemblyTypeName: FallSurviveManager, Assembly-CSharp
+      - m_Target: {fileID: 1285324619}
+        m_TargetAssemblyTypeName: MiniGameBase, Assembly-CSharp
         m_MethodName: Return
         m_Mode: 1
         m_Arguments:
@@ -4826,11 +4825,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1026179542}
-  m_Father: {fileID: 400731101}
+  m_Father: {fileID: 2146069216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -400, y: 0}
+  m_AnchoredPosition: {x: -200.00002, y: -280}
   m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &984313323
@@ -4877,8 +4876,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1285324617}
-        m_TargetAssemblyTypeName: FallSurviveManager, Assembly-CSharp
+      - m_Target: {fileID: 1285324619}
+        m_TargetAssemblyTypeName: MiniGameBase, Assembly-CSharp
         m_MethodName: RestartGame
         m_Mode: 1
         m_Arguments:
@@ -5808,7 +5807,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1285324618}
-  - component: {fileID: 1285324617}
+  - component: {fileID: 1285324619}
   m_Layer: 0
   m_Name: FallSurviveManager
   m_TagString: Untagged
@@ -5816,19 +5815,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1285324617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1285324616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82465fa9af9bb364c95d129d541f67eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  readyCount: 3
 --- !u!4 &1285324618
 Transform:
   m_ObjectHideFlags: 0
@@ -5844,6 +5830,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1285324619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285324616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82465fa9af9bb364c95d129d541f67eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  readyCount: 3
+  gameUI: {fileID: 91616005}
 --- !u!1 &1361020951
 GameObject:
   m_ObjectHideFlags: 0
@@ -9418,6 +9418,7 @@ RectTransform:
   - {fileID: 120535971}
   - {fileID: 1025786620}
   - {fileID: 679043693}
+  - {fileID: 984313322}
   - {fileID: 400731101}
   m_Father: {fileID: 91616004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -7880,6 +7880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   readyCount: 3
+  gameUI: {fileID: 1233108092}
 --- !u!1 &1797447007
 GameObject:
   m_ObjectHideFlags: 0
