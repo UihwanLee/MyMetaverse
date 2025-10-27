@@ -59,6 +59,8 @@ public class FlappyPlaneUI : MonoBehaviour
 
     public void UpdateScore(int score)
     {
+        if (scoreUI == null) return;
+
         TextMeshProUGUI scoreTxt = scoreUI.GetComponentInChildren<TextMeshProUGUI>();
         scoreTxt.text = $"{score}Á¡";
     }
