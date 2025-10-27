@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,10 +37,11 @@ public class CustomizeManager : MonoBehaviour
     [SerializeField] private CustomizingOptionData currentOption;
 
     [Header("Customizing Button UI")]
-    [SerializeField] private Button capBtn;
-    [SerializeField] private Button clothesBtn;
-    [SerializeField] private Button eyeBtn;
+    [SerializeField] private Transform optionButtonParent;
+    [SerializeField] private GameObject customizingOptionPrefab;
+    [SerializeField] private List<Button> customizingOptionList;
     [SerializeField] private GameObject customizingUI;
+    private Button currentOptionBtn;
 
     [Header("Purchase")]
     [SerializeField] private Transform purchaseSlotParent;
@@ -64,6 +66,7 @@ public class CustomizeManager : MonoBehaviour
         colorCount = 12;
 
         GenerateCustomizeSlot();
+        GenerateOptionBtn();
 
         customizingUI.SetActive(false);
     }
@@ -101,6 +104,26 @@ public class CustomizeManager : MonoBehaviour
             btn.onClick.AddListener(() => ChooseColor(currentSlot));
 
             customizingSlotList.Add(customizingSlot);
+        }
+    }
+
+    /// <summary>
+    /// 옵션 버튼 생성
+    /// </summary>
+    private void GenerateOptionBtn()
+    {
+        for(int i=0; i< customizingOptionDataList.Count; i++)
+        {
+            int optionIndex = i;
+            Button customizingOptionBtn = Instantiate(customizingOptionPrefab, optionButtonParent).GetComponent<Button>();
+            customizingOptionBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
+            customizingOptionBtn.GetComponentInChildren<TextMeshProUGUI>().text = customizingOptionDataList[i].optionName;
+            customizingOptionBtn.onClick.AddListener(() =>
+            {
+                ChoiceCustomizingOption(optionIndex);
+            });
+
+            if (customizingOptionBtn != null) customizingOptionList.Add(customizingOptionBtn);
         }
     }
 
@@ -158,27 +181,18 @@ public class CustomizeManager : MonoBehaviour
     /// </summary>
     public void ChoiceCustomizingOption(int option)
     {
-        // 커스터마이징 옵션 선택 : Cap, Clothes, Eye
-
-        capBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
-        clothesBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
-        eyeBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
-
+        // 커스터마이징 옵션 선택 
         currentOption = customizingOptionDataList[option];
-        switch (currentOption.type)
-        {
-            case ECustomizingOptionType.CapOption:
-                capBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
-                break;
-            case ECustomizingOptionType.ClothesOption:
-                clothesBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
-                break;
-            case ECustomizingOptionType.EyeOption:
-                eyeBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
-                break;
-            default:
-                break;
-        }
+
+        // OptionBtn가 없으면 초기화
+        if (currentOptionBtn == null) currentOptionBtn = customizingOptionList[option];
+
+        // 기존 OptionBtn 색상 변경
+        currentOptionBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
+
+        // OptionBtn 색상 변경
+        currentOptionBtn = customizingOptionList[option];
+        currentOptionBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
 
         ChangeCustomizingSlotImage();
         UpdateSlotsByClickSlot(currentOption.selectSlotIdx);
