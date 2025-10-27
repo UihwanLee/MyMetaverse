@@ -796,7 +796,7 @@ GameObject:
   - component: {fileID: 118607319}
   - component: {fileID: 118607322}
   - component: {fileID: 118607321}
-  - component: {fileID: 118607320}
+  - component: {fileID: 118607323}
   m_Layer: 0
   m_Name: NPC_WhiteCat
   m_TagString: Untagged
@@ -821,18 +821,6 @@ Transform:
   - {fileID: 383323207}
   m_Father: {fileID: 1896645206}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &118607320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118607318}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d586868ac1ca5d547a872fe500789f16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &118607321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -891,6 +879,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &118607323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118607318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e4730657d3624469756ac1d15b14a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &121544260
 GameObject:
   m_ObjectHideFlags: 0
@@ -31880,6 +31880,7 @@ GameObject:
   - component: {fileID: 2018824582}
   - component: {fileID: 2018824581}
   - component: {fileID: 2018824583}
+  - component: {fileID: 2018824584}
   m_Layer: 0
   m_Name: NPC_Cat
   m_TagString: Untagged
@@ -31962,6 +31963,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractionUI: {fileID: 75540816}
+--- !u!114 &2018824584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018824580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d586868ac1ca5d547a872fe500789f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2030411942
 GameObject:
   m_ObjectHideFlags: 0

@@ -96,6 +96,13 @@ public class GameManager : MonoBehaviour
     {
         SavePlayer();
         ChangeGameState(GameState.Event);
+        SceneController.Instance.LoadScene(1);
+    }
+
+    public void StartMiniGame2()
+    {
+        SavePlayer();
+        ChangeGameState(GameState.Event);
         SceneController.Instance.LoadScene(2);
     }
 

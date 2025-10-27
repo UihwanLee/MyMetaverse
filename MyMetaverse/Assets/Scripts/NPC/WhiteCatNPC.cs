@@ -6,6 +6,6 @@ public class WhiteCatNPC : MonoBehaviour, IInteractable
 {
     public void Interact()
     {
-        GameManager.Instance.StartMiniGame();
+        GameManager.Instance.StartMiniGame2();
     }
 }
