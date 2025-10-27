@@ -72,4 +72,12 @@ public class DialogUI : MonoBehaviour
             optionBtnList[i].gameObject.SetActive(true);
         }
     }
+
+    public void CloseAllOptionBtn()
+    {
+        for (int i = 0; i < optionCount; i++)
+        {
+            optionBtnList[i].gameObject.SetActive(false);
+        }
+    }
 }

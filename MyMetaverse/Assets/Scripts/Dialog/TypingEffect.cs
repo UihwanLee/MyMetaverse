@@ -36,5 +36,6 @@ public class TypingEffect : MonoBehaviour
 
         // Typing 끝났다고 Action 델리게이트에 알림
         onCompleted?.Invoke();
+        yield return null;
     }
 }
