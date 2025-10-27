@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class SoliderNPC : MonoBehaviour, IInteractable
 {
-    [SerializeField] private CustomizeManager customizeManager;
-    [SerializeField] private GameObject customizingUI;
+    [SerializeField] private Dialog dialog;
 
-    public void Interact()
+    public void Interact(DialogManager dialogManager)
     {
-        GameManager.Instance.ChangeGameState(GameState.UI_Active);
-        customizingUI.SetActive(true);
-        customizeManager.InitCustomizing();
+        GameManager.Instance.ChangeGameState(GameState.Dialog);
+        dialogManager.SetDialog(dialog);
+        dialogManager.StartDialogTyping();
+    }
+
+    public void InteractDialog(DialogManager dialogManager)
+    {
+        dialogManager.DialogInteract();
     }
 }

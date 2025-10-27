@@ -9,6 +9,7 @@ public enum GameState
 {
     Playing,
     UI_Active,
+    Dialog,
     Event,
 }
 
@@ -86,10 +87,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void OpenCustomizingUI()
+    {
+
+    }
+
     public void SetCurrentMiniGame(MiniGameBase miniGame)
     {
         this.currentMiniGame = miniGame;
     }
+
 
     public void StartMiniGame()
     {

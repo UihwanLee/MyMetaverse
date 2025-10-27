@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class NPCInteractionHandler : MonoBehaviour
 {
+    [SerializeField] private DialogManager dialogManager;
     [SerializeField] private GameObject InteractionUI;
 
     private IInteractable interactable;
@@ -21,11 +22,17 @@ public class NPCInteractionHandler : MonoBehaviour
 
     public void Interact()
     {
-        interactable?.Interact();
+        interactable?.Interact(dialogManager);
+    }
+
+    public void InteractDialog()
+    {
+        interactable?.InteractDialog(dialogManager);
     }
 }
 
 public interface IInteractable
 {
-    void Interact();
+    void Interact(DialogManager dialogManager);
+    void InteractDialog(DialogManager dialogManager);
 }

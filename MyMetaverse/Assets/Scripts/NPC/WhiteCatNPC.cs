@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class WhiteCatNPC : MonoBehaviour, IInteractable
 {
-    public void Interact()
+    [SerializeField] private Dialog dialog;
+
+    public void Interact(DialogManager dialogManager)
     {
-        GameManager.Instance.StartMiniGame2();
+        GameManager.Instance.ChangeGameState(GameState.Dialog);
+        dialogManager.SetDialog(dialog);
+        dialogManager.StartDialogTyping();
+    }
+
+    public void InteractDialog(DialogManager dialogManager)
+    {
+        dialogManager.DialogInteract();
     }
 }

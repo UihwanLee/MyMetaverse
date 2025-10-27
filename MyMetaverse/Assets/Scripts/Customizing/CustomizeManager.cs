@@ -21,6 +21,9 @@ public static class MaterialColorName
 
 public class CustomizeManager : MonoBehaviour
 {
+    private static CustomizeManager instance;
+    public static CustomizeManager Instance {  get { return instance; } }
+
     [Header("Transform Info")]
     [SerializeField] private Transform parent;
 
@@ -49,6 +52,11 @@ public class CustomizeManager : MonoBehaviour
     private int colorCount;
     private PlayerController player;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         player = GameManager.Instance.Player;
@@ -58,6 +66,11 @@ public class CustomizeManager : MonoBehaviour
         GenerateCustomizeSlot();
 
         customizingUI.SetActive(false);
+    }
+
+    public void OpenCustomizingUI()
+    {
+        customizingUI.SetActive(true);
     }
 
     #region √ ±‚»≠
