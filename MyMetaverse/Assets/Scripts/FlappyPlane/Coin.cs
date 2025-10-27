@@ -5,6 +5,7 @@ using UnityEngine;
 public class Coin : MonoBehaviour
 {
     [Header("Setting Value")]
+    [SerializeField] private bool isForwardX;
     [SerializeField] private float minOffsetDist;
     [SerializeField] private float maxOffsetDist;
     [SerializeField] private float padding;
@@ -26,12 +27,12 @@ public class Coin : MonoBehaviour
 
     public Vector3 SetRandomPlace(Vector3 lastPosition)
     {
-        // x 위치는 마지막 Coin에서 paddding 값만큼
-        float posX = lastPosition.x + padding;
+        float randomValue = Random.Range(minOffsetDist, maxOffsetDist);
 
-        // y 위치는 마지막 Coin 위치에서 랜덤 값만큼 조정
-        float randomY = Random.Range(minOffsetDist, maxOffsetDist);
-        float posY = lastPosition.y + randomY;
+        // x, y위치는 상하좌우 움직임에 따라 다름
+
+        float posX = (isForwardX) ? lastPosition.x + padding : lastPosition.x + randomValue;
+        float posY = (isForwardX) ? lastPosition.y + randomValue : lastPosition.y + padding;
 
         transform.position = new Vector3(posX, posY, 0);
 

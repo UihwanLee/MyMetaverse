@@ -18,6 +18,9 @@ public class FallSurviveUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI currentRecord;
     [SerializeField] private TextMeshProUGUI gainCoin;
 
+    // GameManager
+    private FallSurviveManager gameManager;
+
 
     private void Start()
     {
@@ -27,6 +30,8 @@ public class FallSurviveUI : MonoBehaviour
         readyUI.SetActive(false);
         scoreUI.SetActive(false);
         coinUI.SetActive(false);
+
+        this.gameManager = GameManager.Instance.CurrentMiniGame<FallSurviveManager>();
     }
 
     public void StartReady(int readyCount)
@@ -53,7 +58,7 @@ public class FallSurviveUI : MonoBehaviour
         readyUI.SetActive(false);
         scoreUI.SetActive(true);
         coinUI.SetActive(true);
-        FallSurviveManager.Instance.GameStart();
+        gameManager.GameStart();
     }
 
     public void UpdateScore(int score)

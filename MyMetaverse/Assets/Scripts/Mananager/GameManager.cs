@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     private PlayerData playerData;
     public PlayerController Player { get; private set; }
 
-
+    public MiniGameBase currentMiniGame { get; private set; }
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -86,11 +86,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SetCurrentMiniGame(MiniGameBase miniGame)
+    {
+        this.currentMiniGame = miniGame;
+        Debug.Log($"GameManager: {miniGame.MiniGameName} 미니게임이 현재 게임으로 설정되었습니다.");
+    }
+
     public void StartMiniGame()
     {
         SavePlayer();
         ChangeGameState(GameState.Event);
-        SceneController.Instance.LoadScene(1);
+        SceneController.Instance.LoadScene(2);
     }
 
     public void ChangeGameState(GameState state)
@@ -106,5 +112,13 @@ public class GameManager : MonoBehaviour
     public void GameQuit()
     {
         Application.Quit();
+    }
+
+    /// <summary>
+    /// 현재 실행 중인 미니게임의 인스턴스를 원하는 타입으로 반환합니다.
+    /// </summary>
+    public T CurrentMiniGame<T>() where T : MiniGameBase
+    {
+        return currentMiniGame as T;
     }
 }

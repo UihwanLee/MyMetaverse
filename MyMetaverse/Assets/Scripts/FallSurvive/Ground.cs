@@ -14,6 +14,14 @@ public class Ground : MonoBehaviour
     [SerializeField] private float maxObstaclePosX;
     [SerializeField] private float padding;
 
+    // GameManager
+    private FallSurviveManager gameManager;
+
+    private void Start()
+    {
+        this.gameManager = GameManager.Instance.CurrentMiniGame<FallSurviveManager>();
+    }
+
     public Vector3 SetRandomPlace(Vector3 lastPosition)
     {
         // ·£´ý Å©±â
@@ -62,5 +70,12 @@ public class Ground : MonoBehaviour
         float outputValue = Mathf.Lerp(OUTPUT_MIN, OUTPUT_MAX, t);
 
         return outputValue;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        ExplorerController player = collision.GetComponent<ExplorerController>();
+        if (player != null)
+            gameManager.AddScore(1);
     }
 }

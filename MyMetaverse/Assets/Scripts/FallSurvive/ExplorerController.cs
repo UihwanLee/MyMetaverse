@@ -41,8 +41,11 @@ public class ExplorerController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
+    }
 
-        gameManager = FallSurviveManager.Instance;
+    private void Start()
+    {
+        this.gameManager = GameManager.Instance.CurrentMiniGame<FallSurviveManager>();
     }
 
     private void Update()

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FallSurviveManager : MonoBehaviour
+public class FallSurviveManager : MiniGameSingleton<FallSurviveManager>
 {
     private int bestScore;
     private int currentScore;
@@ -15,18 +15,15 @@ public class FallSurviveManager : MonoBehaviour
 
     [SerializeField] private int readyCount = 3;
 
-    private static FallSurviveManager instance;
-    public static FallSurviveManager Instance { get { return instance; } }
-
-    private MiniGameState currentGameState;
-    public MiniGameState CurrentGameState { get { return currentGameState; } }
+    public override string MiniGameName => "FallSurvivGameManager";
 
     private readonly string bestScoreKey = "BestFallSurviveScore";
 
-    private void Awake()
+    protected override void Awake()
     {
-        instance = this;
-        currentGameState = MiniGameState.Ready;
+        base.Awake();
+
+        GameManager.Instance.SetCurrentMiniGame(this);
     }
 
     private void Start()

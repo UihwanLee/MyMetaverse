@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FlappyPlane.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/FallSurvive.unity
+    guid: 7802bc1e88feedc4498945977146516d
   m_configObjects: {}

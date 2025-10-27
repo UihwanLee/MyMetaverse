@@ -46,9 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f4e35afa7de9414b923435ae51e4507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isForwardX: 1
   minOffsetDist: -0.2
   maxOffsetDist: 0.2
   padding: 1.5
+  coinValue: 5
 --- !u!58 &1126742513480502847
 CircleCollider2D:
   m_ObjectHideFlags: 0
