@@ -14,9 +14,17 @@ public class FallSurviveLooper : MonoBehaviour
     [SerializeField] private GameObject groundPrefab;
     private Vector3 lastPositionGround;
 
+    [Header("Coin Object")]
+    [SerializeField] private Transform coinParent;
+    [SerializeField] private LayerMask coinLayer;
+    [SerializeField] private int coinCount = 20;
+    [SerializeField] private Coin coinPrefab;
+    private Vector3 lastPositionCoin;
+
     private void Start()
     {
         PlaceAllGrounds();
+        PlaceAllCoins();
     }
 
     private void PlaceAllGrounds()
@@ -28,6 +36,18 @@ public class FallSurviveLooper : MonoBehaviour
         {
             var ground = Instantiate(groundPrefab, groundParent).GetComponent<Ground>();
             lastPositionGround = ground.SetRandomPlace(lastPositionGround);
+        }
+    }
+
+    private void PlaceAllCoins()
+    {
+        if (coinPrefab == null) return;
+
+        lastPositionCoin = new Vector3(0f, -2f, 0f);
+        for (int i = 0; i < coinCount; i++)
+        {
+            var coin = Instantiate(coinPrefab, coinParent).GetComponent<Coin>();
+            lastPositionCoin = coin.SetRandomPlace(lastPositionCoin);
         }
     }
 
@@ -45,6 +65,14 @@ public class FallSurviveLooper : MonoBehaviour
             collision.transform.position = pos;
 
             return;
+        }
+
+        Coin coin;
+        if ((coinLayer & (1 << collision.gameObject.layer)) != 0)
+        {
+            coin = collision.gameObject.GetComponent<Coin>();
+            coin.Animator.SetBool("IsGetCoin", false);
+            lastPositionCoin = coin.SetRandomPlace(lastPositionCoin);
         }
 
         Ground ground = collision.gameObject.GetComponent<Ground>();

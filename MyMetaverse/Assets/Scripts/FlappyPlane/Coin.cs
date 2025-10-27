@@ -17,12 +17,12 @@ public class Coin : MonoBehaviour
     public Animator Animator {  get { return animator; } }
 
     // GameManager
-    private FlappyPlaneManager gameManager;
+    private MiniGameBase gameManager;
 
     private void Start()
     {
         animator = GetComponentInChildren<Animator>();
-        this.gameManager = FlappyPlaneManager.Instance;
+        this.gameManager = GameManager.Instance.CurrentMiniGame<MiniGameBase>();
     }
 
     public Vector3 SetRandomPlace(Vector3 lastPosition)
@@ -32,7 +32,7 @@ public class Coin : MonoBehaviour
         // x, y위치는 상하좌우 움직임에 따라 다름
 
         float posX = (isForwardX) ? lastPosition.x + padding : lastPosition.x + randomValue;
-        float posY = (isForwardX) ? lastPosition.y + randomValue : lastPosition.y + padding;
+        float posY = (isForwardX) ? lastPosition.y + randomValue : lastPosition.y - padding;
 
         transform.position = new Vector3(posX, posY, 0);
 
@@ -42,10 +42,11 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlaneController plane = collision.GetComponent<PlaneController>();
-        if (plane != null)
+        GameObject player = gameManager.GetPlayerObject();
+
+        if (player != null && collision.gameObject == player)
         {
-            // Plane과 충돌 시 Get 애니메이션 적용
+            // Player와 충돌 시 Get 애니메이션 적용
             animator.SetBool(IsGetCoin, true);
             gameManager.AddCoin(coinValue);
         }

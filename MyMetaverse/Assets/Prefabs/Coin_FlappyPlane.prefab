@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2123865811938375875}
   - component: {fileID: 1126742513480502847}
   m_Layer: 6
-  m_Name: Coin
+  m_Name: Coin_FlappyPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

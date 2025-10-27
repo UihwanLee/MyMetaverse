@@ -11,7 +11,7 @@ public enum MiniGameState
 
 public class FlappyPlaneManager : MiniGameSingleton<FlappyPlaneManager>
 {
-    private PlaneController plane;
+    private GameObject player;
 
     public override string MiniGameName => "FlappyPlaneGameManager";
 
@@ -28,7 +28,7 @@ public class FlappyPlaneManager : MiniGameSingleton<FlappyPlaneManager>
     {
         base.Start();
 
-        plane = FindObjectOfType<PlaneController>();
+        player = FindObjectOfType<PlaneController>().transform.gameObject;
     }
 
     public override void CheckRecord()
@@ -39,5 +39,10 @@ public class FlappyPlaneManager : MiniGameSingleton<FlappyPlaneManager>
             PlayerPrefs.SetInt(bestScoreKey, currentScore);
         }
         bestScore = PlayerPrefs.GetInt(bestScoreKey);
+    }
+
+    public override GameObject GetPlayerObject()
+    {
+        return player;
     }
 }

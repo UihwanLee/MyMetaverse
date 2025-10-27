@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class FallSurviveManager : MiniGameSingleton<FallSurviveManager>
 {
-    private ExplorerController player;
+    private GameObject player;
 
     public override string MiniGameName => "FallSurvivGameManager";
 
@@ -22,7 +22,7 @@ public class FallSurviveManager : MiniGameSingleton<FallSurviveManager>
     {
         base.Start();
 
-        player = FindObjectOfType<ExplorerController>();
+        player = FindObjectOfType<ExplorerController>().transform.gameObject;
     }
 
     public override void CheckRecord()
@@ -33,5 +33,10 @@ public class FallSurviveManager : MiniGameSingleton<FallSurviveManager>
             PlayerPrefs.SetInt(bestScoreKey, currentScore);
         }
         bestScore = PlayerPrefs.GetInt(bestScoreKey);
+    }
+
+    public override GameObject GetPlayerObject()
+    {
+        return player;
     }
 }

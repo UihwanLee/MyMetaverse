@@ -83,8 +83,8 @@ public abstract class MiniGameBase : MonoBehaviour
         SceneController.Instance.LoadScene(0);
     }
 
-    public virtual void Exit()
+    public virtual GameObject GetPlayerObject()
     {
-        Debug.Log($"{MiniGameName} Á¾·áµÊ");
+        return null;
     }
 }
