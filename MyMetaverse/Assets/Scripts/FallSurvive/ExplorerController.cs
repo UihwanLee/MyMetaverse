@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class ExplorerController : MonoBehaviour
@@ -15,6 +16,7 @@ public class ExplorerController : MonoBehaviour
     [SerializeField] private Vector2 moveDirection;
     public Vector2 MoveDirection { get { return moveDirection; } }
 
+    private bool isDead;
     private bool isMoving;
     public bool IsMoving { get { return isMoving; } }
 
@@ -23,27 +25,38 @@ public class ExplorerController : MonoBehaviour
 
     [SerializeField] private Animator animator;
 
+    [Header("Layer Info")]
+    [SerializeField] private LayerMask obstacleLayer;
+
 
     // 애니메이션 처리
     private static readonly int MoveDir = Animator.StringToHash("MoveDir");
     private static readonly int IsMove = Animator.StringToHash("IsMove");
 
+    // GameManager
+    private FallSurviveManager gameManager;
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
+
+        gameManager = FallSurviveManager.Instance;
     }
 
     private void Update()
     {
+        if (FallSurviveManager.Instance.CurrentGameState == MiniGameState.Ready) return;
+
         GetUserInput();
         UpdateAnimation();
     }
 
     private void FixedUpdate()
     {
+        if (FallSurviveManager.Instance.CurrentGameState == MiniGameState.Ready) return;
+
         Move();
         Rotate();
     }
@@ -55,6 +68,8 @@ public class ExplorerController : MonoBehaviour
     /// </summary>
     private void GetUserInput()
     {
+        if (isDead) return;
+
         Vector3 dir = Vector3.ClampMagnitude(new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f), 1f);
         moveDirection = dir.normalized;
     }
@@ -68,6 +83,8 @@ public class ExplorerController : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        if (isDead) return;
+
         Vector3 dir = Vector3.ClampMagnitude(new Vector3(Input.GetAxis("Horizontal"), 0f, 0f), 1f);
         moveDirection = dir.normalized;
 
@@ -108,6 +125,23 @@ public class ExplorerController : MonoBehaviour
         Down = 0,
         Up = 1,
         Side = 2
+    }
+
+    #endregion
+
+    #region 충돌 처리
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (isDead) return;
+
+        // 장애물에 닿으면 Dead
+        if ((obstacleLayer & (1 << collision.gameObject.layer)) != 0)
+        {
+            isDead = true;
+            this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f));
+            gameManager.GameOver();
+        }
     }
 
     #endregion
