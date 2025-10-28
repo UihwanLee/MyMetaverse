@@ -17957,9 +17957,6 @@ MonoBehaviour:
   optionButtonParent: {fileID: 264605796}
   customizingOptionPrefab: {fileID: 4417999065142531362, guid: a3614aa6a4de6624f9598478eb14656c, type: 3}
   customizingOptionList: []
-  capBtn: {fileID: 741800137}
-  clothesBtn: {fileID: 530988676}
-  eyeBtn: {fileID: 1981143747}
   customizingUI: {fileID: 2065393719}
   purchaseSlotParent: {fileID: 594489249}
   purchaseSlotPrefab: {fileID: 152844911481253496, guid: 2c00cfb810223af4583dc101e16c55f5, type: 3}
@@ -26042,6 +26039,7 @@ MonoBehaviour:
   moveDirection: {x: 0, y: 0}
   animator: {fileID: 1488736852}
   speechBubbleHandler: {fileID: 759706853}
+  currentCoin: 10000
 --- !u!1 &1403537000
 GameObject:
   m_ObjectHideFlags: 0

@@ -70,10 +70,10 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _CapColor: {r: 1, g: 0.4, b: 0, a: 1}
-    - _ClothesColor: {r: 0, g: 1, b: 1, a: 1}
+    - _CapColor: {r: 0.9, g: 1, b: 1, a: 1}
+    - _ClothesColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EyeColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _EyeColor: {r: 0.7, g: 0.19999996, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
