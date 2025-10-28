@@ -58,6 +58,9 @@ public class CustomizeManager : MonoBehaviour
     private Color whiteColor;
     private Color darkGrayColor;
 
+    public const int SLOT_COUNT = 12;
+    public const int NO_SLOT_SELECTED = -1;
+
     private void Awake()
     {
         instance = this;
@@ -67,7 +70,7 @@ public class CustomizeManager : MonoBehaviour
     {
         player = GameManager.Instance.Player;
         customizingSlotList.Clear();
-        colorCount = 12;
+        colorCount = SLOT_COUNT;
 
         GenerateCustomizeSlot();
         GenerateOptionBtn();
@@ -78,12 +81,7 @@ public class CustomizeManager : MonoBehaviour
         darkGrayColor = ColorData.GetColor(EColor.DarkGray);
     }
 
-    public void OpenCustomizingUI()
-    {
-        customizingUI.SetActive(true);
-    }
-
-    #region 초기화
+    #region 커스터마이징 초기화
 
     /// <summary>
     /// 12가지 색상 슬롯 생성
@@ -146,18 +144,14 @@ public class CustomizeManager : MonoBehaviour
             SetColorByPart(avatarMat, part.materialName, part.originColor);
 
             // 슬롯 정보 초기화
-            part.selectSlotIdx = -1;
-            part.banSlotIdx = -1;
+            part.selectSlotIdx = NO_SLOT_SELECTED;
+            part.banSlotIdx = NO_SLOT_SELECTED;
         }
 
         SetCustomizingBanSlotByPlayerCurrentColor();
         ChoiceCustomizingOption(0);
         UpdatePurchaseSlot();
     }
-
-    #endregion
-
-    #region 커스터마이징 System
 
     /// <summary>
     /// 부위 별 Player 일치 슬롯 Ban Idx 저장
@@ -179,6 +173,10 @@ public class CustomizeManager : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
+    #region 커스터마이징 옵션 클릭
 
     /// <summary>
     /// 커스터마이징 옵션 선택
@@ -206,6 +204,21 @@ public class CustomizeManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 옵션 클릭 시 Slot 변경
+    /// </summary>
+    private void UpdateSlotsByClickOption(int idx)
+    {
+        for (int i = 0; i < customizingSlotList.Count; i++)
+        {
+            customizingSlotList[i].ResetSlot();
+        }
+
+        if (idx > customizingSlotList.Count || idx < 0) return;
+
+        customizingSlotList[idx].HighlightSlot();
+    }
+
+    /// <summary>
     /// 커스터마이징 옵션에 따른 슬롯 이미지 변경
     /// </summary>
     private void ChangeCustomizingSlotImage()
@@ -225,31 +238,14 @@ public class CustomizeManager : MonoBehaviour
         // 옵션 별 Ban으로 지정된 idx를 찾아서 Ban
         int banIdx = currentOption.banSlotIdx;
 
-        if (banIdx == -1) return;
+        if (banIdx == NO_SLOT_SELECTED) return;
 
         customizingSlotList[banIdx].BanSlot();
     }
 
-    /// <summary>
-    /// 원래 색상으로 되돌리기
-    /// </summary>
-    public void Revart()
-    {
-        // 원래 색상으로 전체 되돌리기
-        Material avatarMat = avatar.transform.GetComponent<Image>().material;
-        foreach (var part in customizingOptionDataList)
-        {
-            part.selectSlotIdx = -1;
-            SetColorByPart(avatarMat, part.materialName, part.originColor);
-        }
-
-        UpdatePurchaseSlot();
-        UpdateSlotsByClickSlot(-1);
-    }
-
     #endregion
 
-    #region 슬롯 선택
+    #region 커스터마이징 슬롯 클릭
 
     /// <summary>
     /// 슬롯을 클릭하였을 때 해당 색상 반영
@@ -272,9 +268,9 @@ public class CustomizeManager : MonoBehaviour
     private void ChooseSameColorSlot(Material avatarMat)
     {
         // 똑같은 슬롯 설정하면 선택 해제하고 기존 색상으로 돌아가기
-        currentOption.selectSlotIdx = -1;
+        currentOption.selectSlotIdx = NO_SLOT_SELECTED;
         avatarMat.SetColor(currentOption.materialName, currentOption.originColor);
-        UpdateSlotsByClickSlot(-1);
+        UpdateSlotsByClickSlot(NO_SLOT_SELECTED);
 
         UpdatePurchaseSlot();
     }
@@ -296,54 +292,6 @@ public class CustomizeManager : MonoBehaviour
         UpdatePurchaseSlot();
     }
 
-    #endregion
-
-    #region UI 업데이트
-
-    /// <summary>
-    /// 구매 항목 수정
-    /// </summary>
-    private void UpdatePurchaseSlot()
-    {
-        // purchaseSlotParent에 위치 해 있는 자식 오브젝트 삭제
-        int childCount = purchaseSlotParent.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
-        {
-            Destroy(purchaseSlotParent.GetChild(i).gameObject);
-        }
-
-        int totalPrice = 0;
-
-        foreach (var part in customizingOptionDataList)
-        {
-            if(part.selectSlotIdx != -1)
-            {
-                // purchaseSlotParent에 purchaseSlotPrefab 생성
-                var purchaseSlot = Instantiate(purchaseSlotPrefab, purchaseSlotParent);
-                purchaseSlot.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"커스터마이징 - {part.name}";
-                purchaseSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{part.price}G";
-                totalPrice += part.price;
-            }
-        }
-
-        totalPriceTxt.text = totalPrice.ToString();
-    }
-
-    /// <summary>
-    /// 옵션 클릭 시 Slot 변경
-    /// </summary>
-    private void UpdateSlotsByClickOption(int idx)
-    {
-        for (int i = 0; i < customizingSlotList.Count; i++)
-        {
-            customizingSlotList[i].ResetSlot();
-        }
-
-        if (idx > customizingSlotList.Count || idx < 0) return;
-
-        customizingSlotList[idx].HighlightSlot();
-    }
-
     /// <summary>
     /// 슬롯 클릭 시 하이라이트 효과 반영
     /// </summary>
@@ -360,9 +308,10 @@ public class CustomizeManager : MonoBehaviour
         currentSlot.HighlightSlot();
     }
 
+
     #endregion
 
-    #region 구매
+    #region 커스터마이징 색상 구매
 
     /// <summary>
     /// 구매 시도
@@ -393,10 +342,68 @@ public class CustomizeManager : MonoBehaviour
         foreach (var part in customizingOptionDataList)
         {
             // 선택한 색상이 있다면 해당 색상으로 변경
-            if (part.selectSlotIdx != -1) { SetColorByPart(playerMat, part.materialName, part.changeColor); }
+            if (part.selectSlotIdx != NO_SLOT_SELECTED) { SetColorByPart(playerMat, part.materialName, part.changeColor); }
         }
 
         CloseCustomizingUI();
+    }
+
+    /// <summary>
+    /// 구매 항목 수정
+    /// </summary>
+    private void UpdatePurchaseSlot()
+    {
+        // purchaseSlotParent에 위치 해 있는 자식 오브젝트 삭제
+        int childCount = purchaseSlotParent.childCount;
+        for (int i = childCount - 1; i >= 0; i--)
+        {
+            Destroy(purchaseSlotParent.GetChild(i).gameObject);
+        }
+
+        int totalPrice = 0;
+
+        foreach (var part in customizingOptionDataList)
+        {
+            if (part.selectSlotIdx != NO_SLOT_SELECTED)
+            {
+                // purchaseSlotParent에 purchaseSlotPrefab 생성
+                var purchaseSlot = Instantiate(purchaseSlotPrefab, purchaseSlotParent);
+                purchaseSlot.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = $"커스터마이징 - {part.name}";
+                purchaseSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"{part.price}G";
+                totalPrice += part.price;
+            }
+        }
+
+        totalPriceTxt.text = totalPrice.ToString();
+    }
+
+    #endregion
+
+    #region 커스터마이징 버튼 기능
+
+    /// <summary>
+    /// 원래 색상으로 되돌리기
+    /// </summary>
+    public void Revart()
+    {
+        // 원래 색상으로 전체 되돌리기
+        Material avatarMat = avatar.transform.GetComponent<Image>().material;
+        foreach (var part in customizingOptionDataList)
+        {
+            part.selectSlotIdx = NO_SLOT_SELECTED;
+            SetColorByPart(avatarMat, part.materialName, part.originColor);
+        }
+
+        UpdatePurchaseSlot();
+        UpdateSlotsByClickSlot(NO_SLOT_SELECTED);
+    }
+
+    /// <summary>
+    /// 커스터마이징 UI 열기
+    /// </summary>
+    public void OpenCustomizingUI()
+    {
+        customizingUI.SetActive(true);
     }
 
     /// <summary>

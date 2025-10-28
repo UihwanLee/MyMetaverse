@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     [Header("SpeechBubble Info")]
     [SerializeField] private SpeechBubbleHandler speechBubbleHandler;
 
-    private int currentCoin;
+    [SerializeField] private int currentCoin;
     public int CurrentCoin { get { return currentCoin; } set { currentCoin = value; } }
 
 
