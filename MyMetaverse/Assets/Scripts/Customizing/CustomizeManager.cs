@@ -35,14 +35,13 @@ public class CustomizeManager : MonoBehaviour
 
     [Header("Customizing Option")]
     [SerializeField] private List<CustomizingOptionData> customizingOptionDataList;
-    [SerializeField] private CustomizingOptionData currentOption;
 
     [Header("Customizing Button UI")]
     [SerializeField] private Transform optionButtonParent;
     [SerializeField] private GameObject customizingOptionPrefab;
-    [SerializeField] private List<Button> customizingOptionList;
+    [SerializeField] private List<CustomizingOption> customizingOptionList;
     [SerializeField] private GameObject customizingUI;
-    private Button currentOptionBtn;
+    private CustomizingOption currentOption;
 
     [Header("Purchase")]
     [SerializeField] private Transform purchaseSlotParent;
@@ -72,8 +71,8 @@ public class CustomizeManager : MonoBehaviour
         customizingSlotList.Clear();
         colorCount = SLOT_COUNT;
 
+        GenerateOption();
         GenerateCustomizeSlot();
-        GenerateOptionBtn();
 
         customizingUI.SetActive(false);
 
@@ -110,22 +109,28 @@ public class CustomizeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 옵션 버튼 생성
+    /// 옵션 생성
     /// </summary>
-    private void GenerateOptionBtn()
+    private void GenerateOption()
     {
         for(int i=0; i< customizingOptionDataList.Count; i++)
         {
             int optionIndex = i;
-            Button customizingOptionBtn = Instantiate(customizingOptionPrefab, optionButtonParent).GetComponent<Button>();
-            customizingOptionBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
-            customizingOptionBtn.GetComponentInChildren<TextMeshProUGUI>().text = customizingOptionDataList[i].optionName;
-            customizingOptionBtn.onClick.AddListener(() =>
+            CustomizingOption customizingOption = Instantiate(customizingOptionPrefab, optionButtonParent).GetComponent<CustomizingOption>();
+
+            // 옵션 초기화
+            CustomizingOptionData optionData = customizingOptionDataList[i];
+            customizingOption.InitOption(optionData);
+            customizingOption.ChangeColorOrigin();
+
+            // 옵션 버튼 onClick Event 설정
+            Button btn = customizingOption.GetComponent<Button>();
+            btn.onClick.AddListener(() =>
             {
                 ChoiceCustomizingOption(optionIndex);
             });
 
-            if (customizingOptionBtn != null) customizingOptionList.Add(customizingOptionBtn);
+            if (customizingOption != null) customizingOptionList.Add(customizingOption);
         }
     }
 
@@ -183,23 +188,18 @@ public class CustomizeManager : MonoBehaviour
     /// </summary>
     public void ChoiceCustomizingOption(int option)
     {
-        // 커스터마이징 옵션 선택 
-        currentOption = customizingOptionDataList[option];
-
-        // OptionBtn가 없으면 초기화
-        if (currentOptionBtn == null) currentOptionBtn = customizingOptionList[option];
+        // Option이 null이면 초기화
+        if(currentOption == null) currentOption = customizingOptionList[option];
 
         // 기존 OptionBtn 색상 변경
-        Image optionImg = currentOptionBtn.GetComponent<Image>();
-        optionImg.color = whiteColor;
+        currentOption.ChangeColorOrigin();
 
         // OptionBtn 색상 변경
-        currentOptionBtn = customizingOptionList[option];
-        optionImg = currentOptionBtn.GetComponent<Image>();
-        optionImg.color = darkGrayColor;
+        currentOption = customizingOptionList[option];
+        currentOption.ChangeColorHighlight();
 
         ChangeCustomizingSlotImage();
-        UpdateSlotsByClickOption(currentOption.selectSlotIdx);
+        UpdateSlotsByClickOption(currentOption.Data.selectSlotIdx);
         BanCustomizingSlotByCurrentPlayerColor();
     }
 
@@ -225,8 +225,7 @@ public class CustomizeManager : MonoBehaviour
     {
         for (int i = 0; i < customizingSlotList.Count; i++)
         {
-            Image img = customizingSlotList[i].transform.GetChild(2).GetComponent<Image>();
-            img.sprite = currentOption.sprite;
+            customizingSlotList[i].SetSpriteSlotIcon(currentOption.Data.sprite);
         }
     }
 
@@ -236,7 +235,7 @@ public class CustomizeManager : MonoBehaviour
     private void BanCustomizingSlotByCurrentPlayerColor()
     {
         // 옵션 별 Ban으로 지정된 idx를 찾아서 Ban
-        int banIdx = currentOption.banSlotIdx;
+        int banIdx = currentOption.Data.banSlotIdx;
 
         if (banIdx == NO_SLOT_SELECTED) return;
 
@@ -255,7 +254,7 @@ public class CustomizeManager : MonoBehaviour
         Material avatarMat = avatar.transform.GetComponent<Image>().material;
 
         // 똑같은 슬롯 골랐는지 확인
-        if (slot.Idx == currentOption.selectSlotIdx)
+        if (slot.Idx == currentOption.Data.selectSlotIdx)
         {
             ChooseSameColorSlot(avatarMat);
             return;
@@ -268,8 +267,8 @@ public class CustomizeManager : MonoBehaviour
     private void ChooseSameColorSlot(Material avatarMat)
     {
         // 똑같은 슬롯 설정하면 선택 해제하고 기존 색상으로 돌아가기
-        currentOption.selectSlotIdx = NO_SLOT_SELECTED;
-        avatarMat.SetColor(currentOption.materialName, currentOption.originColor);
+        currentOption.Data.selectSlotIdx = NO_SLOT_SELECTED;
+        avatarMat.SetColor(currentOption.Data.materialName, currentOption.Data.originColor);
         UpdateSlotsByClickSlot(NO_SLOT_SELECTED);
 
         UpdatePurchaseSlot();
@@ -283,11 +282,11 @@ public class CustomizeManager : MonoBehaviour
 
         //// 고른 색상으로 아바타 색상 변경
         Color changeColor = ColorData.GetColor(slot.Idx);
-        avatarMat.SetColor(currentOption.materialName, changeColor);
+        avatarMat.SetColor(currentOption.Data.materialName, changeColor);
 
         // 현재 선택한 Slot 정보 Option 정보에 저장
-        currentOption.selectSlotIdx = slot.Idx;
-        currentOption.changeColor = changeColor;
+        currentOption.Data.selectSlotIdx = slot.Idx;
+        currentOption.Data.changeColor = changeColor;
 
         UpdatePurchaseSlot();
     }

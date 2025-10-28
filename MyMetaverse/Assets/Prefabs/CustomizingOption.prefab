@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 6756802776571224012}
   - component: {fileID: 1047984267127542314}
   - component: {fileID: 1047542760659708021}
+  - component: {fileID: 8905266415674049790}
   m_Layer: 5
-  m_Name: CustomizingOptionBtn
+  m_Name: CustomizingOption
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,6 +134,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8905266415674049790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4417999065142531362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aa46eb720983d2418426a1f32b25dcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  optionData: {fileID: 0}
+  optionImg: {fileID: 1047984267127542314}
+  optionName: {fileID: 8214428895053294542}
 --- !u!1 &8068846869673154093
 GameObject:
   m_ObjectHideFlags: 0
