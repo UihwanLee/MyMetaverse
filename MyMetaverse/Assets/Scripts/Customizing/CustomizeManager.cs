@@ -121,7 +121,6 @@ public class CustomizeManager : MonoBehaviour
             // 옵션 초기화
             CustomizingOptionData optionData = customizingOptionDataList[i];
             customizingOption.InitOption(optionData);
-            customizingOption.ChangeColorOrigin();
 
             // 옵션 버튼 onClick Event 설정
             Button btn = customizingOption.GetComponent<Button>();
