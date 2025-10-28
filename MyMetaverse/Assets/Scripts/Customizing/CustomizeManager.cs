@@ -28,9 +28,10 @@ public class CustomizeManager : MonoBehaviour
     [Header("Transform Info")]
     [SerializeField] private Transform parent;
 
-    [Header("Color Slot")]
+    [Header("customizing Slot")]
     [SerializeField] private List<CustomizingSlot> customizingSlotList;
     [SerializeField] private GameObject customizingSlotPrefab;
+    private CustomizingSlot currentSlot;
 
     [Header("Customizing Option")]
     [SerializeField] private List<CustomizingOptionData> customizingOptionDataList;
@@ -54,6 +55,9 @@ public class CustomizeManager : MonoBehaviour
     private int colorCount;
     private PlayerController player;
 
+    private Color whiteColor;
+    private Color darkGrayColor;
+
     private void Awake()
     {
         instance = this;
@@ -69,6 +73,9 @@ public class CustomizeManager : MonoBehaviour
         GenerateOptionBtn();
 
         customizingUI.SetActive(false);
+
+        whiteColor = ColorData.GetColor(EColor.White);
+        darkGrayColor = ColorData.GetColor(EColor.DarkGray);
     }
 
     public void OpenCustomizingUI()
@@ -88,20 +95,17 @@ public class CustomizeManager : MonoBehaviour
         {
             var customizingSlot = Instantiate(customizingSlotPrefab, parent).GetComponent<CustomizingSlot>();
 
+            int idx = i;
+            Sprite iconSprite = customizingOptionDataList[0].sprite;
+            Color iconColor = ColorData.GetColor(idx);
+
+            // CustomizingSlot 초기화
+            customizingSlot.InitSlot(idx, iconSprite, iconColor);
+
+            // Button onClickEvent 설정
             Button btn = customizingSlot.GetComponent<Button>();
-            Image colorImage = customizingSlot.transform.GetChild(2).GetComponent<Image>();
-            Material colorMat = new Material(colorImage.material);
-
-            customizingSlot.Idx = i;
-            colorImage.sprite = customizingOptionDataList[0].sprite;
-            colorImage.material = colorMat;
-            colorMat.color = ColorData.GetColor(i);
-            customizingSlot.transform.GetChild(0).gameObject.SetActive(false);
-            customizingSlot.transform.GetChild(3).gameObject.SetActive(false);
-            customizingSlot.transform.GetChild(1).GetComponent<Image>().color = ColorData.GetColor(EColor.White);
-
-            CustomizingSlot currentSlot = customizingSlot;
-            btn.onClick.AddListener(() => ChooseColor(currentSlot));
+            CustomizingSlot slot = customizingSlot;
+            btn.onClick.AddListener(() => ChooseColor(slot));
 
             customizingSlotList.Add(customizingSlot);
         }
@@ -188,14 +192,16 @@ public class CustomizeManager : MonoBehaviour
         if (currentOptionBtn == null) currentOptionBtn = customizingOptionList[option];
 
         // 기존 OptionBtn 색상 변경
-        currentOptionBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.White);
+        Image optionImg = currentOptionBtn.GetComponent<Image>();
+        optionImg.color = whiteColor;
 
         // OptionBtn 색상 변경
         currentOptionBtn = customizingOptionList[option];
-        currentOptionBtn.GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
+        optionImg = currentOptionBtn.GetComponent<Image>();
+        optionImg.color = darkGrayColor;
 
         ChangeCustomizingSlotImage();
-        UpdateSlotsByClickSlot(currentOption.selectSlotIdx);
+        UpdateSlotsByClickOption(currentOption.selectSlotIdx);
         BanCustomizingSlotByCurrentPlayerColor();
     }
 
@@ -221,9 +227,7 @@ public class CustomizeManager : MonoBehaviour
 
         if (banIdx == -1) return;
 
-        customizingSlotList[banIdx].GetComponent<Button>().interactable = false;
-        customizingSlotList[banIdx].transform.GetChild(1).GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
-        customizingSlotList[banIdx].transform.GetChild(3).gameObject.SetActive(true);
+        customizingSlotList[banIdx].BanSlot();
     }
 
     /// <summary>
@@ -326,21 +330,34 @@ public class CustomizeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 슬롯 클릭 시 하이라이트 효과 반영
+    /// 옵션 클릭 시 Slot 변경
     /// </summary>
-    private void UpdateSlotsByClickSlot(int idx)
+    private void UpdateSlotsByClickOption(int idx)
     {
         for (int i = 0; i < customizingSlotList.Count; i++)
         {
-            customizingSlotList[i].transform.GetChild(0).gameObject.SetActive(false);
-            customizingSlotList[i].transform.GetChild(1).GetComponent<Image>().color = ColorData.GetColor(EColor.White);
-            customizingSlotList[i].transform.GetChild(3).gameObject.SetActive(false);
+            customizingSlotList[i].ResetSlot();
         }
 
         if (idx > customizingSlotList.Count || idx < 0) return;
 
-        customizingSlotList[idx].transform.GetChild(0).gameObject.SetActive(true);
-        customizingSlotList[idx].transform.GetChild(1).GetComponent<Image>().color = ColorData.GetColor(EColor.DarkGray);
+        customizingSlotList[idx].HighlightSlot();
+    }
+
+    /// <summary>
+    /// 슬롯 클릭 시 하이라이트 효과 반영
+    /// </summary>
+    private void UpdateSlotsByClickSlot(int idx)
+    {
+        // 전에 선택했던 슬롯은 리셋
+        if (currentSlot != null)
+            currentSlot.ResetSlot();
+
+        if (idx > customizingSlotList.Count || idx < 0) return;
+
+        // 새로 클릭한 슬롯 하이라이트
+        currentSlot = customizingSlotList[idx];
+        currentSlot.HighlightSlot();
     }
 
     #endregion
